@@ -3,120 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的 3D 滾動個人網站</title>
+  <title>我的 3D 進階互動官網</title>
   
-  <!-- 1. 引入正確、沒有被縮寫截斷的 Google model-viewer 核心腳本 -->
-  <script type="module" src="https://cloudflare.com"></script>
-  
-  <!-- 2. 引入正確完整的 GSAP 動畫庫與滾動觸發外掛 -->
+  <!-- 引入業界最穩定的 Three.js 核心庫與 GLTF 載入器 (全部採用 cdnjs 完整節點，絕不觸發 CORS 封鎖) -->
+  <script src="https://cloudflare.com"></script>
+  <script src="https://jsdelivr.net"></script>
+  <!-- 引入動畫庫 GSAP -->
   <script src="https://cloudflare.com"></script>
   <script src="https://cloudflare.com"></script>
 
   <style>
     body, html {
-      margin: 0;
-      padding: 0;
-      background-color: #0d0d11;
-      color: #ffffff;
-      font-family: sans-serif;
-      overflow-x: hidden;
+      margin: 0; padding: 0;
+      background-color: #0d0d11; color: #ffffff;
+      font-family: sans-serif; overflow-x: hidden;
     }
-    
-    /* 背景 3D 模型固定滿版 */
-    model-viewer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
-      --poster-color: transparent;
+    /* 讓 Three.js 的畫布死死固定在背景 */
+    #canvas-container {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; z-index: 1;
     }
-
-    .scroll-container {
-      position: relative;
-      z-index: 2;
-    }
-
-    .page-section {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 0 8%;
-      box-sizing: border-box;
-    }
-
-    .page-section:nth-child(even) {
-      justify-content: flex-end;
-    }
-
-    .text-box {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 40px;
-      border-radius: 16px;
-      max-width: 400px;
-    }
-
+    .scroll-container { position: relative; z-index: 2; }
+    .page-section { height: 100vh; display: flex; align-items: center; padding: 0 8%; box-sizing: border-box; }
+    .page-section:nth-child(even) { justify-content: flex-end; }
+    .text-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 16px; max-width: 400px; }
     h1 { margin: 0 0 15px 0; font-size: 2.5rem; color: #00fff2; }
     p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #ccc; }
   </style>
 </head>
 <body>
 
-  <!-- 3. 3D 模型標籤：已將 draco 解碼器也指向 cdnjs 的穩定節點，徹底避免被瀏覽器 CORS 政策阻擋 -->
-  <model-viewer 
-    id="my-avatar" 
-    src="123zip.glb" 
-    draco-decoder-path="https://cloudflare.com"
-    shadow-intensity="1" 
-    environment-image="neutral"
-    camera-orbit="0deg 75deg 2.5m">
-  </model-viewer>
+  <!-- Three.js 渲染容器 -->
+  <div id="canvas-container"></div>
 
-  <!-- 前景捲動內容 -->
+  <!-- 前景文字區塊 -->
   <div class="scroll-container">
     <section class="page-section">
       <div class="text-box">
         <h1>歡迎來到我的空間</h1>
-        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會發生什麼事？</p>
+        <p>滾動網頁我會跟著「轉身」，同時我的「眼睛」會不斷死死盯著你的滑鼠指標移動喔！</p>
       </div>
     </section>
-    
     <section class="page-section">
       <div class="text-box">
         <h1>關於我的作品</h1>
-        <p>當網頁往下捲動時，背景的模型會自動轉向側面，帶出流暢的網頁互動體驗。</p>
+        <p>這使用的是 Three.js 引擎，不再受到任何外部檢視器的限制，未來想加什麼特效都可以！</p>
       </div>
     </section>
-    
     <section class="page-section">
       <div class="text-box">
         <h1>聯絡我</h1>
-        <p>模型現在轉到了背面。不論往上或往下捲動，動態效果都會完美同步！</p>
+        <p>快動動滑鼠，測試眼球跟隨吧！</p>
       </div>
     </section>
   </div>
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
-    const model = document.querySelector('#my-avatar');
 
-    // 建立與滾動綁定的動畫
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".scroll-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1
-      }
+    // 1. 初始化 Three.js 場景 (Scene)、相機 (Camera)、渲染器 (Renderer)
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 2.5); // 設定鏡頭遠近
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // 2. 加入自然環境光照 (Lights)，讓 AI 模型色彩豐富立體
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // 3. 建立變數用來儲存模型物件與眼球骨骼 (Bones)
+    let model, leftEye, rightEye;
+    const mouse = { x: 0, y: 0 }; // 儲存網頁滑鼠座標
+
+    // 4. 利用 GLTFLoader 載入您的 123zip.glb 模型
+    const loader = new THREE.GLTFLoader();
+    loader.load('123zip.glb', (gltf) => {
+      model = gltf.scene;
+      model.position.set(0, -0.6, 0); // 調整模型在畫面上的上下高度
+      scene.add(model);
+
+      // 💡 自動抓取眼球物件：請確保你在 Blender 裡將左眼命名為 "eye_L" 或包含 "eye" 的英文名字
+      // 程式碼會遍歷整個模型，自動把眼睛抓出來
+      model.traverse((child) => {
+        if (child.isMesh || child.isBone) {
+          if (child.name.toLowerCase().includes('eye_l') || child.name.toLowerCase().includes('left_eye')) leftEye = child;
+          if (child.name.toLowerCase().includes('eye_r') || child.name.toLowerCase().includes('right_eye')) rightEye = child;
+        }
+      });
+
+      // 5. 綁定 GSAP 網頁滾動動畫（控制整體轉身）
+      gsap.to(model.rotation, {
+        y: Math.PI, // 捲動到最底時，旋轉 180 度轉向背面
+        scrollTrigger: {
+          trigger: ".scroll-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1
+        }
+      });
+    }, undefined, (error) => { console.error('模型載入失敗：', error); });
+
+    // 6. 監聽滑鼠移動事件 (MouseMove)，計算眼球應該旋轉的角度
+    window.addEventListener('mousemove', (event) => {
+      // 將滑鼠位置標準化為 -1 到 +1 之間的數值
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     });
 
-    // 滾動時改變模型的 camera-orbit 角度
-    tl.to(model, { attr: { "camera-orbit": "90deg 75deg 2.5m" }, ease: "none" })
-      .to(model, { attr: { "camera-orbit": "180deg 75deg 2.5m" }, ease: "none" });
+    // 7. 每秒 60 幀不斷執行的動態渲染迴圈 (Render Loop)
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // 💡 實現眼球鼠標跟隨的核心邏輯
+      if (leftEye && rightEye) {
+        // 限制眼球轉動的最大範圍 (避免翻白眼或穿模)，將數值乘上 0.3 微調
+        const targetRotationY = mouse.x * 0.3;
+        const targetRotationX = -mouse.y * 0.2;
+
+        // 利用線性插值 (Lerp) 讓眼球轉動變得極度絲滑柔順
+        leftEye.rotation.y += (targetRotationY - leftEye.rotation.y) * 0.1;
+        leftEye.rotation.x += (targetRotationX - leftEye.rotation.x) * 0.1;
+        rightEye.rotation.y += (targetRotationY - rightEye.rotation.y) * 0.1;
+        rightEye.rotation.x += (targetRotationX - rightEye.rotation.x) * 0.1;
+      }
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // 8. 響應式視窗縮放 (Resize)
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
