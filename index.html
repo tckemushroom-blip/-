@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的 3D 滾動個人網站</title>
   
-  <!-- 1. 引入正確完整的 Google 官方 3D 檢視器載入腳本 -->
+  <!-- 引入 Google 官方最穩定的 3D 檢視器核心組件 -->
   <script type="module" src="https://googleapis.com"></script>
   
-  <!-- 2. 引入正確完整的 GSAP 動畫庫與滾動觸發外掛 -->
+  <!-- 引入網頁滾動動畫控制組件 GSAP -->
   <script src="https://cloudflare.com"></script>
   <script src="https://cloudflare.com"></script>
 
@@ -66,11 +66,11 @@
 </head>
 <body>
 
-  <!-- 3. 完美配置模型名稱 123zip.glb 加上一字不漏的 Google 官方線上 Draco 解碼器網址 -->
+  <!-- 3D 模型標籤：已將 draco-decoder-path 指向 cdnjs 的開源備用節點，避免被瀏覽器阻擋 -->
   <model-viewer 
     id="my-avatar" 
     src="123zip.glb" 
-    draco-decoder-path="https://gstatic.com"
+    draco-decoder-path="https://cloudflare.com"
     shadow-intensity="1" 
     environment-image="neutral"
     camera-orbit="0deg 75deg 2.5m">
@@ -81,7 +81,7 @@
     <section class="page-section">
       <div class="text-box">
         <h1>歡迎來到我的空間</h1>
-        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會发生什麼事？</p>
+        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會發生什麼事？</p>
       </div>
     </section>
     
