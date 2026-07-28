@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的 3D 滾動個人網站</title>
   
-  <!-- 1. 全面使用 cdnjs 官方完整分發路徑，防堵 jsdelivr 與 cloudflare 網域連線逾時問題 -->
+  <!-- 全網頁僅引入唯一個 Google 官方最穩定的 3D 組件標籤 (採用 cdnjs 核心節點) -->
   <script type="module" src="https://cloudflare.com"></script>
-  <script src="https://cloudflare.com"></script>
-  <script src="https://cloudflare.com"></script>
 
   <style>
     body, html {
@@ -16,24 +14,46 @@
       background-color: #0d0d11; color: #ffffff;
       font-family: sans-serif; overflow-x: hidden;
     }
-    /* 背景 3D 模型固定滿版 */
+    
+    /* 讓 3D 模型固定在背景，滿版顯示 */
     model-viewer {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh; z-index: 1;
       pointer-events: none;
       --poster-color: transparent;
     }
+
     .scroll-container { position: relative; z-index: 2; }
-    .page-section { height: 100vh; display: flex; align-items: center; padding: 0 8%; box-sizing: border-box; }
-    .page-section:nth-child(even) { justify-content: flex-end; }
-    .text-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 16px; max-width: 400px; }
+
+    /* 建立超長網頁區塊，讓網頁有往下捲動的空間 */
+    .page-section {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 8%;
+      box-sizing: border-box;
+    }
+
+    .page-section:nth-child(even) {
+      justify-content: flex-end;
+    }
+
+    .text-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 16px;
+      max-width: 400px;
+    }
+
     h1 { margin: 0 0 15px 0; font-size: 2.5rem; color: #00fff2; }
     p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #ccc; }
   </style>
 </head>
 <body>
 
-  <!-- 2. 將 draco 解碼器路徑同步指向 cdnjs 穩定節點，避開外部網路死角 -->
+  <!-- 3D 模型標籤：自動載入您上傳的 123zip.glb 模型檔案 -->
   <model-viewer 
     id="my-avatar" 
     src="123zip.glb" 
@@ -43,7 +63,7 @@
     camera-orbit="0deg 75deg 2.5m">
   </model-viewer>
 
-  <!-- 前景捲動內容 -->
+  <!-- 前景捲動文字內容 -->
   <div class="scroll-container">
     <section class="page-section">
       <div class="text-box">
@@ -68,22 +88,22 @@
   </div>
 
   <script>
-    gsap.registerPlugin(ScrollTrigger);
-    const model = document.querySelector('#my-avatar');
+    // 💡 終極秘訣：拋棄任何第三方動畫庫，改用純瀏覽器原生的事件監聽來進行角度換算
+    window.addEventListener('scroll', () => {
+      const model = document.querySelector('#my-avatar');
+      if (!model) return;
 
-    // 建立與滾動綁定的動畫
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".scroll-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1
-      }
+      // 1. 計算當前網頁的滾動進度百分比（0 代表頂端，1 代表底端）
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = scrollTop / docHeight;
+
+      // 2. 將百分比轉換為相機角度（從正面 0度 流暢轉變為背面 180度）
+      const targetDegree = scrollPercent * 180;
+
+      // 3. 利用瀏覽器原生 setAttribute 更改模型的相機視角，這招保證絕對不壞掉
+      model.setAttribute('camera-orbit', `${targetDegree}deg 75deg 2.5m`);
     });
-
-    // 滾動時改變模型的 camera-orbit 角度
-    tl.to(model, { attr: { "camera-orbit": "90deg 75deg 2.5m" }, ease: "none" })
-      .to(model, { attr: { "camera-orbit": "180deg 75deg 2.5m" }, ease: "none" });
   </script>
 </body>
 </html>
