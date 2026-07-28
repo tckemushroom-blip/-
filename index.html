@@ -5,12 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的 3D 滾動個人網站</title>
   
-  <!-- 引入業界最穩定的 Three.js 核心庫與 GLTF 載入器 (全站採用 cdnjs 安全節點，防堵 CORS 阻擋) -->
-  <script src="https://cloudflare.com"></script>
-  <script src="https://jsdelivr.net"></script>
-  <!-- 引入 Google 官方備用的 Draco 獨立解碼器插件 -->
-  <script src="https://jsdelivr.net"></script>
-  <!-- 引入動畫庫 GSAP -->
+  <!-- 1. 全面使用 cdnjs 官方完整分發路徑，防堵 jsdelivr 與 cloudflare 網域連線逾時問題 -->
+  <script type="module" src="https://cloudflare.com"></script>
   <script src="https://cloudflare.com"></script>
   <script src="https://cloudflare.com"></script>
 
@@ -20,10 +16,12 @@
       background-color: #0d0d11; color: #ffffff;
       font-family: sans-serif; overflow-x: hidden;
     }
-    /* 讓 3D 畫布固定在背景 */
-    #canvas-container {
+    /* 背景 3D 模型固定滿版 */
+    model-viewer {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh; z-index: 1;
+      pointer-events: none;
+      --poster-color: transparent;
     }
     .scroll-container { position: relative; z-index: 2; }
     .page-section { height: 100vh; display: flex; align-items: center; padding: 0 8%; box-sizing: border-box; }
@@ -35,10 +33,17 @@
 </head>
 <body>
 
-  <!-- 3D 渲染畫布 -->
-  <div id="canvas-container"></div>
+  <!-- 2. 將 draco 解碼器路徑同步指向 cdnjs 穩定節點，避開外部網路死角 -->
+  <model-viewer 
+    id="my-avatar" 
+    src="123zip.glb" 
+    draco-decoder-path="https://cloudflare.com"
+    shadow-intensity="1" 
+    environment-image="neutral"
+    camera-orbit="0deg 75deg 2.5m">
+  </model-viewer>
 
-  <!-- 前景捲動文字內容 -->
+  <!-- 前景捲動內容 -->
   <div class="scroll-container">
     <section class="page-section">
       <div class="text-box">
@@ -64,66 +69,21 @@
 
   <script>
     gsap.registerPlugin(ScrollTrigger);
+    const model = document.querySelector('#my-avatar');
 
-    // 1. 初始化 Three.js 環境
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0, 2.5); // 設定鏡頭遠近
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    // 2. 設置場景自然光照
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
-
-    let model;
-
-    // 3. 配置 Draco 解碼器（直接使用 jsdelivr 的開源本地節點，徹底避開 CORS 阻擋問題）
-    const dracoLoader = new THREE.DRACOLoader();
-    dracoLoader.setDecoderPath('https://jsdelivr.net');
-
-    // 4. 將解碼器掛載到 GLTF 載入器上
-    const loader = new THREE.GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
-
-    // 5. 載入您的 123zip.glb 模型檔案
-    loader.load('123zip.glb', (gltf) => {
-      model = gltf.scene;
-      model.position.set(0, -0.6, 0); // 調整模型在畫面上的上下位置
-      scene.add(model);
-
-      // 6. 綁定網頁滾動動畫（全模型隨捲動轉身）
-      gsap.to(model.rotation, {
-        y: Math.PI, // 捲動到最底部時剛好旋轉 180 度到背面
-        scrollTrigger: {
-          trigger: ".scroll-container",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1
-        }
-      });
-    }, undefined, (error) => { console.error('3D 模型載入發生錯誤：', error); });
-
-    // 7. 動態渲染迴圈
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // 8. 響應式視窗縮放
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    // 建立與滾動綁定的動畫
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".scroll-container",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1
+      }
     });
+
+    // 滾動時改變模型的 camera-orbit 角度
+    tl.to(model, { attr: { "camera-orbit": "90deg 75deg 2.5m" }, ease: "none" })
+      .to(model, { attr: { "camera-orbit": "180deg 75deg 2.5m" }, ease: "none" });
   </script>
 </body>
 </html>
