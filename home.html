@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的 3D 滾動個人網站</title>
+  
+  <!-- 僅引入唯一必要的 3D 元件，改用 Google 官方維護的原生最新穩定連結 -->
+  <script type="module" src="https://googleapis.com"></script>
+
+  <style>
+    body, html {
+      margin: 0; padding: 0;
+      background-color: #0d0d11; color: #ffffff;
+      font-family: sans-serif; overflow-x: hidden;
+    }
+    
+    /* 讓 3D 模型固定在背景，滿版顯示 */
+    model-viewer {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; z-index: 1;
+      pointer-events: none;
+      --poster-color: transparent;
+    }
+
+    .scroll-container { position: relative; z-index: 2; }
+
+    /* 建立超長網頁區塊，讓網頁可以往下滾動 */
+    .page-section {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 8%;
+      box-sizing: border-box;
+    }
+
+    .page-section:nth-child(even) {
+      justify-content: flex-end;
+    }
+
+    .text-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 16px;
+      max-width: 400px;
+    }
+
+    h1 { margin: 0 0 15px 0; font-size: 2.5rem; color: #00fff2; }
+    p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #ccc; }
+  </style>
+</head>
+<body>
+
+  <!-- 3D 模型：利用 model-viewer 內建的 draco 插件載入您上傳的 123zip.glb 模型 -->
+  <model-viewer 
+    id="my-avatar" 
+    src="123zip.glb" 
+    draco-decoder-path="https://gstatic.com"
+    shadow-intensity="1" 
+    environment-image="neutral"
+    camera-orbit="0deg 75deg 2.5m">
+  </model-viewer>
+
+  <!-- 前景捲動文字內容 -->
+  <div class="scroll-container">
+    <section class="page-section">
+      <div class="text-box">
+        <h1>歡迎來到我的空間</h1>
+        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會發生什麼事？</p>
+      </div>
+    </section>
+    
+    <section class="page-section">
+      <div class="text-box">
+        <h1>關於我的作品</h1>
+        <p>當網頁往下捲動時，背景的模型會自動轉向側面，帶出流暢的網頁互動體驗。</p>
+      </div>
+    </section>
+    
+    <section class="page-section">
+      <div class="text-box">
+        <h1>聯絡我</h1>
+        <p>模型現在轉到了背面。不論往上或往下捲動，動態效果都會完美同步！</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // 利用純網頁的原生事件監聽，去換算滾動進度並直接改變模型角度
+    window.addEventListener('scroll', () => {
+      const model = document.querySelector('#my-avatar');
+      if (!model) return;
+
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = scrollTop / docHeight;
+      const targetDegree = scrollPercent * 180;
+
+      model.setAttribute('camera-orbit', `${targetDegree}deg 75deg 2.5m`);
+    });
+  </script>
+</body>
+</html>
