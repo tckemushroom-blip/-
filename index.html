@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的 3D 滾動個人網站</title>
   
-  <!-- 引入 Google 官方最穩定的 3D 檢視器核心組件 -->
-  <script type="module" src="https://googleapis.com"></script>
+  <!-- 1. 引入正確、沒有被縮寫截斷的 Google model-viewer 核心腳本 -->
+  <script type="module" src="https://cloudflare.com"></script>
   
-  <!-- 引入網頁滾動動畫控制組件 GSAP -->
+  <!-- 2. 引入正確完整的 GSAP 動畫庫與滾動觸發外掛 -->
   <script src="https://cloudflare.com"></script>
   <script src="https://cloudflare.com"></script>
 
@@ -66,11 +66,11 @@
 </head>
 <body>
 
-  <!-- 3D 模型標籤：已將 draco-decoder-path 指向 cdnjs 的開源備用節點，避免被瀏覽器阻擋 -->
+  <!-- 3. 3D 模型標籤：已將 draco 解碼器也指向 cdnjs 的穩定節點，徹底避免被瀏覽器 CORS 政策阻擋 -->
   <model-viewer 
     id="my-avatar" 
     src="123zip.glb" 
-    draco-decoder-path="https://www.gstatic.com/draco/v1/decoders/"
+    draco-decoder-path="https://cloudflare.com"
     shadow-intensity="1" 
     environment-image="neutral"
     camera-orbit="0deg 75deg 2.5m">
