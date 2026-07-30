@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的 3D 滾動個人網站</title>
   
-  <!-- 僅引入唯一必要的 3D 元件，改用 Google 官方維護的原生最新穩定連結 -->
+  <!-- 引入 Google 官方最穩定的 3D 元件核心腳本 -->
   <script type="module" src="https://googleapis.com"></script>
 
   <style>
@@ -15,17 +15,17 @@
       font-family: sans-serif; overflow-x: hidden;
     }
     
-    /* 讓 3D 模型固定在背景，滿版顯示 */
+    /* 背景 3D 模型固定滿版 */
     model-viewer {
       position: fixed; top: 0; left: 0;
       width: 100vw; height: 100vh; z-index: 1;
-      pointer-events: none;
+      pointer-events: none; /* 💡 關閉滑鼠手勢，改由滾動控制 */
       --poster-color: transparent;
     }
 
     .scroll-container { position: relative; z-index: 2; }
 
-    /* 建立超長網頁區塊，讓網頁可以往下滾動 */
+    /* 建立超長網頁區塊，讓網頁有往下捲動的空間 */
     .page-section {
       height: 100vh;
       display: flex;
@@ -53,22 +53,21 @@
 </head>
 <body>
 
-  <!-- 3D 模型：利用 model-viewer 內建的 draco 插件載入您上傳的 123zip.glb 模型 -->
+  <!-- 💡 核心修改：src="me.glb" 直接讀取你在 Blender 裡大瘦身出來的完美 3D 模型檔案 -->
   <model-viewer 
     id="my-avatar" 
-    src="123zip.glb" 
-    draco-decoder-path="https://gstatic.com"
+    src="me.glb" 
     shadow-intensity="1" 
     environment-image="neutral"
     camera-orbit="0deg 75deg 2.5m">
   </model-viewer>
 
-  <!-- 前景捲動文字內容 -->
+  <!-- 前景捲動內容 -->
   <div class="scroll-container">
     <section class="page-section">
       <div class="text-box">
         <h1>歡迎來到我的空間</h1>
-        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會發生什麼事？</p>
+        <p>這是我用 AI 生成並經由 Blender 優化的 3D 全身造型。試著向下滾動網頁看看？</p>
       </div>
     </section>
     
