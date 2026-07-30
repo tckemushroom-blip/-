@@ -28,7 +28,8 @@ scene.add(amb);
 let model = null;
 const loader = new GLTFLoader();
 
-loader.load('./assets/me.glb',
+// NOTE: your me.glb is at the repository root. Load from './me.glb' to match its current location.
+loader.load('./me.glb',
   (gltf) => {
     model = gltf.scene;
     // center & scale model so it fits nicely
