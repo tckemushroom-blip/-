@@ -6,6 +6,15 @@
   <title>我的線上作品集</title>
   <link rel="stylesheet" href="styles.css" />
   <meta name="description" content="我的特色線上作品集 — 含 3D 模型與捲動互動" />
+
+  <!-- Import map: 讓瀏覽器在遇到 bare import 'three' 時能解析到 CDN 的 module 檔 -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.154.0/build/three.module.js"
+    }
+  }
+  </script>
 </head>
 <body>
   <!-- 固定放 3D 的區塊 -->
@@ -30,19 +39,20 @@
       <h2>Projects / 作品</h2>
       <div class="cards">
         <article class="card">
-          <img src="assets/sample-1.jpg" alt="作品範例 1" />
+          <!-- 使用線上佔位圖避免 404（你之後可以上傳實際圖片到 assets/ 並還原路徑） -->
+          <img src="https://placehold.co/600x400?text=Sample+1" alt="作品範例 1" />
           <h3>作品名稱 1</h3>
           <p>作品描述（可放短文、技術標註、工具等）。</p>
         </article>
 
         <article class="card">
-          <img src="assets/sample-2.jpg" alt="作品範例 2" />
+          <img src="https://placehold.co/600x400?text=Sample+2" alt="作品範例 2" />
           <h3>作品名稱 2</h3>
           <p>作品描述（可放短文、技術標註、工具等）。</p>
         </article>
 
         <article class="card">
-          <img src="assets/sample-3.jpg" alt="作品範例 3" />
+          <img src="https://placehold.co/600x400?text=Sample+3" alt="作品範例 3" />
           <h3>作品名稱 3</h3>
           <p>作品描述（可放短文、技術標註、工具等）。</p>
         </article>
