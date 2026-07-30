@@ -1,109 +1,65 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的 3D 滾動個人網站</title>
-  
-  <!-- 全網頁僅引入唯一個 Google 官方最穩定的 3D 組件標籤 (採用 cdnjs 核心節點) -->
-  <script type="module" src="https://cloudflare.com"></script>
-
-  <style>
-    body, html {
-      margin: 0; padding: 0;
-      background-color: #0d0d11; color: #ffffff;
-      font-family: sans-serif; overflow-x: hidden;
-    }
-    
-    /* 讓 3D 模型固定在背景，滿版顯示 */
-    model-viewer {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh; z-index: 1;
-      pointer-events: none;
-      --poster-color: transparent;
-    }
-
-    .scroll-container { position: relative; z-index: 2; }
-
-    /* 建立超長網頁區塊，讓網頁有往下捲動的空間 */
-    .page-section {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 0 8%;
-      box-sizing: border-box;
-    }
-
-    .page-section:nth-child(even) {
-      justify-content: flex-end;
-    }
-
-    .text-box {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 40px;
-      border-radius: 16px;
-      max-width: 400px;
-    }
-
-    h1 { margin: 0 0 15px 0; font-size: 2.5rem; color: #00fff2; }
-    p { margin: 0; font-size: 1.1rem; line-height: 1.6; color: #ccc; }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>我的線上作品集</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="我的特色線上作品集 — 含 3D 模型與捲動互動" />
 </head>
 <body>
+  <!-- 固定放 3D 的區塊 -->
+  <div id="scene" aria-hidden="true"></div>
 
-  <!-- 3D 模型標籤：自動載入您上傳的 123zip.glb 模型檔案 -->
-  <model-viewer 
-    id="my-avatar" 
-    src="123zip.glb" 
-    draco-decoder-path="https://cloudflare.com"
-    shadow-intensity="1" 
-    environment-image="neutral"
-    camera-orbit="0deg 75deg 2.5m">
-  </model-viewer>
+  <!-- 頁首 / Hero -->
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>我的作品集</h1>
+      <p>捲動頁面來旋轉我的 Q 版 3D 模型</p>
+      <a class="cta" href="#projects">查看作品</a>
+    </div>
+  </header>
 
-  <!-- 前景捲動文字內容 -->
-  <div class="scroll-container">
-    <section class="page-section">
-      <div class="text-box">
-        <h1>歡迎來到我的空間</h1>
-        <p>這是我用 AI 生成的 3D 虛擬造型。試著向下滾動網頁，看看會發生什麼事？</p>
+  <main>
+    <section id="about" class="panel">
+      <h2>About / 關於我</h2>
+      <p>這裡寫你的自我介紹、技能摘要、與設計/創作方向。</p>
+    </section>
+
+    <section id="projects" class="panel">
+      <h2>Projects / 作品</h2>
+      <div class="cards">
+        <article class="card">
+          <img src="assets/sample-1.jpg" alt="作品範例 1" />
+          <h3>作品名稱 1</h3>
+          <p>作品描述（可放短文、技術標註、工具等）。</p>
+        </article>
+
+        <article class="card">
+          <img src="assets/sample-2.jpg" alt="作品範例 2" />
+          <h3>作品名稱 2</h3>
+          <p>作品描述（可放短文、技術標註、工具等）。</p>
+        </article>
+
+        <article class="card">
+          <img src="assets/sample-3.jpg" alt="作品範例 3" />
+          <h3>作品名稱 3</h3>
+          <p>作品描述（可放短文、技術標註、工具等）。</p>
+        </article>
       </div>
     </section>
-    
-    <section class="page-section">
-      <div class="text-box">
-        <h1>關於我的作品</h1>
-        <p>當網頁往下捲動時，背景的模型會自動轉向側面，帶出流暢的網頁互動體驗。</p>
-      </div>
+
+    <section id="contact" class="panel">
+      <h2>Contact / 聯絡我</h2>
+      <p>Email: yourname@example.com</p>
+      <p>在此放社群連結或下載履歷的按鈕。</p>
     </section>
-    
-    <section class="page-section">
-      <div class="text-box">
-        <h1>聯絡我</h1>
-        <p>模型現在轉到了背面。不論往上或往下捲動，動態效果都會完美同步！</p>
-      </div>
-    </section>
-  </div>
+  </main>
 
-  <script>
-    // 💡 終極秘訣：拋棄任何第三方動畫庫，改用純瀏覽器原生的事件監聽來進行角度換算
-    window.addEventListener('scroll', () => {
-      const model = document.querySelector('#my-avatar');
-      if (!model) return;
+  <footer class="footer">
+    <small>© 2026 你的名字</small>
+  </footer>
 
-      // 1. 計算當前網頁的滾動進度百分比（0 代表頂端，1 代表底端）
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = scrollTop / docHeight;
-
-      // 2. 將百分比轉換為相機角度（從正面 0度 流暢轉變為背面 180度）
-      const targetDegree = scrollPercent * 180;
-
-      // 3. 利用瀏覽器原生 setAttribute 更改模型的相機視角，這招保證絕對不壞掉
-      model.setAttribute('camera-orbit', `${targetDegree}deg 75deg 2.5m`);
-    });
-  </script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
