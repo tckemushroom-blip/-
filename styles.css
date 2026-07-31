@@ -1,4 +1,4 @@
-:root{
+ :root{
   --bg:#eaf9ef; /* 淺綠/粉綠 背景 */
   --panel:rgba(255,255,255,0.95);
   --text:#042a1f; /* 深綠文字 */
@@ -68,7 +68,7 @@ body > *:not(#scene){
 .panel{
   min-height:70vh;
   padding:4rem 6%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.84));
+  background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.62));
   border-top:1px solid rgba(0,0,0,0.03);
   z-index:1;
   color:var(--text);
