@@ -2,6 +2,9 @@
 import * as THREE from 'https://unpkg.com/three@0.154.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js';
 
+// Expose THREE globally to make Console debugging easier
+window.THREE = THREE;
+
 const container = document.getElementById('scene');
 
 // create renderer
@@ -32,14 +35,15 @@ let modelSize = new THREE.Vector3();
 let modelCenter = new THREE.Vector3();
 let headTarget = new THREE.Vector3(0, 1.2, 0); // fallback
 
-// Expose debug object early so Console can access it even before model loads
+// Expose a minimal debug object early so Console can access scene/camera/renderer even before model loads
 window.__portfolio3d = {
   scene,
   camera,
   renderer,
   get model() { return model; },
   headTarget,
-  debugShowCube: (v = true) => { showDebugCube = v; console.log('debug cube visible:', showDebugCube); }
+  // debugCube will be attached below; provide a safe stub for debugShowCube for early access
+  debugShowCube: (v = true) => { showDebugCube = v; console.log('debug cube visible (flag):', showDebugCube); }
 };
 
 // debug cube to confirm renderer is working
@@ -49,6 +53,14 @@ const debugCube = new THREE.Mesh(debugGeo, debugMat);
 debugCube.position.set(0, 1.0, 0);
 scene.add(debugCube);
 let showDebugCube = false; // set true temporarily to see cube
+
+// attach debugCube reference and replace debugShowCube with a direct controller
+window.__portfolio3d.debugCube = debugCube;
+window.__portfolio3d.debugShowCube = (v = true) => {
+  debugCube.visible = !!v;
+  showDebugCube = !!v;
+  console.log('debug cube visible:', debugCube.visible);
+};
 
 const loader = new GLTFLoader();
 
