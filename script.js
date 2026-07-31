@@ -100,7 +100,9 @@ loader.load(modelUrl,
 
     // scale & center model
     const maxDim = Math.max(sizeBefore.x, sizeBefore.y, sizeBefore.z);
-    const scale = (1.15) / (maxDim || 1);
+    let scale = (1.15) / (maxDim || 1);
+    // clamp scale to avoid extremely small/large models
+    scale = Math.max(0.03, Math.min(3, scale));
     model.scale.setScalar(scale);
 
     const box = new THREE.Box3().setFromObject(model);
@@ -117,8 +119,23 @@ loader.load(modelUrl,
 
     scene.add(model);
 
+    // ensure model and its meshes are visible and have usable material settings
+    model.traverse((n) => {
+      if (n.isMesh) {
+        n.visible = true;
+        if (n.material) {
+          try { n.material.side = THREE.DoubleSide; } catch(e) { /* ignore */ }
+          try { n.material.needsUpdate = true; } catch(e) { }
+        }
+        try { n.castShadow = true; n.receiveShadow = true; } catch(e) { }
+      }
+    });
+
+    try { statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(v=>v.toFixed(3)).join('×')})`; } catch(e) { }
+
     // hide debug cube once model is visible
     showDebugCube = false;
+    debugCube.visible = false;
 
     // START observing sections only after model is added — avoids camera race conditions
     sections.forEach(s => io.observe(s));
