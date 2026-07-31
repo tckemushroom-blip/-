@@ -1,24 +1,30 @@
+// script.js (module)
 import * as THREE from 'https://unpkg.com/three@0.154.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js';
 
 const container = document.getElementById('scene');
 
-// renderer + scene + camera
+// create renderer
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 container.appendChild(renderer.domElement);
 
+// camera
 const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
 camera.position.set(0, 1.5, 3);
 
-// lights
-const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.9);
+// lights (increased intensity to ensure visibility)
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
 scene.add(hemi);
-const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+const dir = new THREE.DirectionalLight(0xffffff, 1.8);
 dir.position.set(5, 10, 7);
 scene.add(dir);
-scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+const amb = new THREE.AmbientLight(0xffffff, 0.8);
+scene.add(amb);
+
+// debug helper: grid + axes (only visible in dev if needed)
+// const grid = new THREE.GridHelper(10, 10, 0x444444, 0x222222); scene.add(grid);
 
 // globals
 let model = null;
@@ -26,43 +32,68 @@ let modelSize = new THREE.Vector3();
 let modelCenter = new THREE.Vector3();
 let headTarget = new THREE.Vector3(0, 1.2, 0); // fallback
 
+// debug cube to confirm renderer is working
+const debugGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+const debugMat = new THREE.MeshStandardMaterial({ color: 0xff4444 });
+const debugCube = new THREE.Mesh(debugGeo, debugMat);
+debugCube.position.set(0, 1.0, 0);
+scene.add(debugCube);
+let showDebugCube = false; // set true temporarily to see cube
+
 const loader = new GLTFLoader();
-loader.load('./me.glb', // 改成 './assets/me.glb' 如果你把模型放到 assets/
+
+// NOTE: load from repo root './me.glb' (change to './assets/me.glb' if you move the file)
+loader.load('./me.glb',
   (gltf) => {
+    console.log('GLTF loaded', gltf);
     model = gltf.scene;
 
-    // compute bbox, scale, center
-    const box = new THREE.Box3().setFromObject(model);
-    box.getSize(modelSize);
-    box.getCenter(modelCenter);
+    // compute bounding box and log sizes for debugging
+    const boxBefore = new THREE.Box3().setFromObject(model);
+    const sizeBefore = new THREE.Vector3();
+    boxBefore.getSize(sizeBefore);
+    console.log('Model bbox before scale:', sizeBefore);
 
-    const maxDim = Math.max(modelSize.x, modelSize.y, modelSize.z);
+    // scale & center model
+    const maxDim = Math.max(sizeBefore.x, sizeBefore.y, sizeBefore.z);
     const scale = (1.2) / (maxDim || 1);
     model.scale.setScalar(scale);
 
-    box.setFromObject(model);
+    const box = new THREE.Box3().setFromObject(model);
     box.getSize(modelSize);
     box.getCenter(modelCenter);
 
     model.position.sub(modelCenter);
     model.position.y -= 0.05;
 
-    // estimate head target (adjust multiplier if needed)
+    console.log('Model bbox after scale:', modelSize, 'modelCenter:', modelCenter, 'model.position:', model.position);
+
+    // set head target based on model size
     headTarget.set(0, modelSize.y * 0.22 - 0.05, 0);
 
     scene.add(model);
 
-    // ensure camera initially looks at head
-    camera.lookAt(headTarget);
+    // hide debug cube once model is visible
+    showDebugCube = false;
   },
-  undefined,
-  (err) => { console.error('GLTF load error:', err); }
+  (xhr) => {
+    // progress - optional
+    if (xhr && xhr.loaded && xhr.total) {
+      const pct = Math.round((xhr.loaded / xhr.total) * 100);
+      // console.log('Model loading: ' + pct + '%');
+    }
+  },
+  (err) => {
+    console.error('GLTF load error:', err);
+    // keep debug cube visible to indicate renderer working
+    showDebugCube = true;
+  }
 );
 
-// resize
+// resize handling
 function resize() {
-  const w = container.clientWidth;
-  const h = container.clientHeight;
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
   renderer.setSize(w, h);
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
@@ -70,7 +101,7 @@ function resize() {
 new ResizeObserver(resize).observe(container);
 resize();
 
-// sections -> presets
+// sections and presets
 const hero = document.querySelector('.hero');
 const panels = Array.from(document.querySelectorAll('main .panel'));
 const sections = hero ? [hero, ...panels] : panels;
@@ -96,48 +127,46 @@ const io = new IntersectionObserver((entries) => {
         currentPreset = idx;
         cameraTargetPos.copy(sectionPresets[idx].pos);
         cameraTargetLook = headTarget.clone();
+        console.log('Switching to preset', idx, cameraTargetPos.toArray());
       }
     }
   });
 }, { threshold: 0.55 });
-
 sections.forEach(s => io.observe(s));
 
-// stable render loop with guard
-let loopRunning = false;
+// render loop
 function renderLoop() {
-  // smooth position
+  // animate debug cube if visible
+  if (showDebugCube) debugCube.rotation.y += 0.03;
+  else debugCube.rotation.y = 0;
+
+  // smooth camera pos
   camera.position.lerp(cameraTargetPos, 0.08);
 
-  // smooth lookAt via quaternion slerp
+  // smooth lookAt via quaternion
   cameraTmpObj.position.copy(camera.position);
   cameraTmpObj.lookAt(cameraTargetLook);
   camera.quaternion.slerp(cameraTmpObj.quaternion, 0.08);
 
-  // tiny idle rotation so it's not dead-still
-  if (model) model.rotation.y += 0.0004;
+  if (model) model.rotation.y += 0.0005;
 
   renderer.render(scene, camera);
 }
 
-function startLoop() {
-  if (!loopRunning) {
-    renderer.setAnimationLoop(renderLoop);
-    loopRunning = true;
-  }
-}
-function stopLoop() {
-  if (loopRunning) {
-    renderer.setAnimationLoop(null);
-    loopRunning = false;
-  }
-}
+// stable start
+let loopPaused = false;
+renderer.setAnimationLoop(renderLoop);
 
-// start once
-startLoop();
-
-// pause/resume on visibility change (uses guard so we don't repeatedly toggle)
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopLoop();
-  else startLoop();
+  if (document.hidden) {
+    if (!loopPaused) { renderer.setAnimationLoop(null); loopPaused = true; console.log('Render loop paused'); }
+  } else {
+    if (loopPaused) { renderer.setAnimationLoop(renderLoop); loopPaused = false; console.log('Render loop resumed'); }
+  }
 });
+
+// Export some debug helpers to console for live inspection
+window.__portfolio3d = {
+  scene, camera, renderer, model, headTarget,
+  debugShowCube: (v = true) => { showDebugCube = v; console.log('debug cube visible:', showDebugCube); }
+};
