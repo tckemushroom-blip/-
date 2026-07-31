@@ -117,6 +117,19 @@ loader.load(modelUrl,
     // set head target based on model size
     headTarget.set(0, modelSize.y * 0.22 - 0.05, 0);
 
+    // fit camera to model bounding sphere so model is guaranteed in view
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    const fitFactor = 1.6;
+    const fitDist = sphere.radius * fitFactor;
+    // position camera slightly above center and back along Z
+    camera.position.set(modelCenter.x, modelCenter.y + sphere.radius * 0.9, modelCenter.z + fitDist);
+    camera.lookAt(modelCenter);
+    camera.updateProjectionMatrix();
+    // update camera targets used by the animation loop
+    cameraTargetPos.copy(camera.position);
+    cameraTargetLook = modelCenter.clone();
+
     scene.add(model);
 
     // ensure model and its meshes are visible and have usable material settings
