@@ -54,7 +54,21 @@ const debugMat = new THREE.MeshStandardMaterial({ color: 0xff4444 });
 const debugCube = new THREE.Mesh(debugGeo, debugMat);
 debugCube.position.set(0, 1.0, 0);
 scene.add(debugCube);
-let showDebugCube = false; // set true temporarily to see cube
+// show debug cube by default so an indicator appears if model fails to load
+let showDebugCube = true; // default visible for debugging
+
+// status overlay (index.html also contains a #model-status element; fall back to creating one)
+let statusOverlay = document.getElementById('model-status');
+if (!statusOverlay) {
+  statusOverlay = document.createElement('div');
+  statusOverlay.id = 'model-status';
+  statusOverlay.setAttribute('aria-hidden', 'true');
+  statusOverlay.style.cssText = 'position:fixed;bottom:12px;left:12px;padding:8px 12px;background:rgba(0,0,0,0.6);color:#fff;border-radius:6px;font-family:system-ui;font-size:13px;z-index:9999;pointer-events:none;';
+  statusOverlay.textContent = '3D model: initializing...';
+  document.body.appendChild(statusOverlay);
+} else {
+  statusOverlay.textContent = '3D model: initializing...';
+}
 
 // attach debugCube reference and replace debugShowCube with a direct controller
 window.__portfolio3d.debugCube = debugCube;
@@ -107,15 +121,24 @@ loader.load('./me.glb',
     // progress - optional
     if (xhr && xhr.loaded && xhr.total) {
       const pct = Math.round((xhr.loaded / xhr.total) * 100);
-      // console.log('Model loading: ' + pct + '%');
+      // update overlay with percent
+      try { statusOverlay.textContent = `3D model: loading ${pct}%`; } catch (e) { /* ignore */ }
     }
   },
   (err) => {
     console.error('GLTF load error:', err);
-    // keep debug cube visible to indicate renderer working
-    showDebugCube = true;
-  }
+   try { statusOverlay.textContent = `3D model: load error`; } catch (e) { }
+   // keep debug cube visible to indicate renderer working
+   showDebugCube = true;
+ }
 );
+
+// update overlay on successful load
+// (already inside onLoad we set showDebugCube=false)
+(function attachLoadOverlayHook(){
+ const originalOnLoad = null; // placeholder - handled directly in loader callbacks above
+})();
+
 
 // resize handling
 function resize() {
