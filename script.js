@@ -12,7 +12,7 @@ container.appendChild(renderer.domElement);
 
 // camera
 const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
-camera.position.set(0, 1.5, 3);
+camera.position.set(0, 1.5, 2.6); // slightly closer than before
 
 // lights (increased intensity to ensure visibility)
 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
@@ -20,7 +20,7 @@ scene.add(hemi);
 const dir = new THREE.DirectionalLight(0xffffff, 1.8);
 dir.position.set(5, 10, 7);
 scene.add(dir);
-const amb = new THREE.AmbientLight(0xffffff, 0.8);
+const amb = new THREE.AmbientLight(0xffffff, 0.9);
 scene.add(amb);
 
 // debug helper: grid + axes (only visible in dev if needed)
@@ -56,7 +56,7 @@ loader.load('./me.glb',
 
     // scale & center model
     const maxDim = Math.max(sizeBefore.x, sizeBefore.y, sizeBefore.z);
-    const scale = (1.2) / (maxDim || 1);
+    const scale = (1.15) / (maxDim || 1);
     model.scale.setScalar(scale);
 
     const box = new THREE.Box3().setFromObject(model);
@@ -108,9 +108,9 @@ const sections = hero ? [hero, ...panels] : panels;
 
 const sectionPresets = sections.map((_, i) => {
   const baseY = 1.6;
-  const deltaY = 0.35;
-  const baseZ = 3.0;
-  const deltaZ = 0.6;
+  const deltaY = 0.25; // smaller vertical deltas
+  const baseZ = 2.6; // closer base distance
+  const deltaZ = 0.35; // smaller Z change between sections
   return { pos: new THREE.Vector3(0, baseY - i * deltaY, baseZ + i * deltaZ) };
 });
 
@@ -164,9 +164,3 @@ document.addEventListener('visibilitychange', () => {
     if (loopPaused) { renderer.setAnimationLoop(renderLoop); loopPaused = false; console.log('Render loop resumed'); }
   }
 });
-
-// Export some debug helpers to console for live inspection
-window.__portfolio3d = {
-  scene, camera, renderer, model, headTarget,
-  debugShowCube: (v = true) => { showDebugCube = v; console.log('debug cube visible:', showDebugCube); }
-};
