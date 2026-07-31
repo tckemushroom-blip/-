@@ -11,7 +11,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 container.appendChild(renderer.domElement);
 
 const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
-camera.position.set(0, 1.2, 3);
+camera.position.set(0, 1.5, 3);
 
 // lights
 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.9);
@@ -19,37 +19,46 @@ scene.add(hemi);
 const dir = new THREE.DirectionalLight(0xffffff, 1.0);
 dir.position.set(5, 10, 7);
 scene.add(dir);
+scene.add(new THREE.AmbientLight(0xffffff, 0.25));
 
-// ground-ish subtle light
-const amb = new THREE.AmbientLight(0xffffff, 0.25);
-scene.add(amb);
-
-// load model
+// globals for model
 let model = null;
+let modelSize = new THREE.Vector3();
+let modelCenter = new THREE.Vector3();
+let headTarget = new THREE.Vector3(0, 1.2, 0); // fallback target (in case model not loaded yet)
+
 const loader = new GLTFLoader();
 
-// NOTE: your me.glb is at the repository root. Load from './me.glb' to match its current location.
 loader.load('./me.glb',
   (gltf) => {
     model = gltf.scene;
-    // center & scale model so it fits nicely
+
+    // compute bounding box
     const box = new THREE.Box3().setFromObject(model);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z);
+    box.getSize(modelSize);
+    box.getCenter(modelCenter);
+
+    // scale to a reasonable size
+    const maxDim = Math.max(modelSize.x, modelSize.y, modelSize.z);
     const scale = (1.2) / (maxDim || 1);
     model.scale.setScalar(scale);
 
-    // recalc bbox after scale and center
+    // recalc bbox after scale
     box.setFromObject(model);
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    model.position.sub(center); // center at origin
+    box.getSize(modelSize);
+    box.getCenter(modelCenter);
 
-    // small down offset so model sits a little lower
-    model.position.y -= 0.1;
+    // center model at origin
+    model.position.sub(modelCenter);
+    model.position.y -= 0.05;
+
+    // estimate head/face target above center
+    headTarget.set(0, modelSize.y * 0.2 - 0.05, 0);
 
     scene.add(model);
+
+    // ensure initial camera looks at headTarget
+    camera.lookAt(headTarget);
   },
   undefined,
   (err) => {
@@ -57,7 +66,7 @@ loader.load('./me.glb',
   }
 );
 
-// handle resizing
+// resize handling
 function resize() {
   const w = container.clientWidth;
   const h = container.clientHeight;
@@ -68,42 +77,76 @@ function resize() {
 new ResizeObserver(resize).observe(container);
 resize();
 
-// scroll-driven rotation
-let targetY = 0;
-let targetX = 0;
-let currentY = 0;
-let currentX = 0;
-const turns = 2.0; // 總共轉幾圈，根據需求調整
+// SECTION-DRIVEN CAMERA PRESETS
+// include header.hero as the first section (if exists) + all main .panel sections
+const hero = document.querySelector('.hero');
+const panels = Array.from(document.querySelectorAll('main .panel'));
+const sections = hero ? [hero, ...panels] : panels;
 
-function updateTargets() {
-  const scrollTop = window.scrollY || window.pageYOffset;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = docHeight > 0 ? scrollTop / docHeight : 0;
-  // Y 軸依 progress 完成多圈旋轉
-  targetY = progress * Math.PI * 2 * turns;
-  // X 軸做輕微仰/俯 tilt（讓模型在頂部/底部有不同角度）
-  targetX = (progress - 0.5) * 0.6; // 範圍約 -0.3 .. +0.3
-}
-window.addEventListener('scroll', updateTargets, { passive: true });
-updateTargets();
+// camera presets computed per section
+const sectionPresets = sections.map((sec, i) => {
+  const baseY = 1.6; // camera height for first section
+  const deltaY = 0.35; // decrease per section
+  const baseZ = 3.0; // camera distance for first section
+  const deltaZ = 0.6; // increase per section
 
-// animation loop
-const lerp = (a, b, t) => a + (b - a) * t;
+  const y = baseY - i * deltaY;
+  const z = baseZ + i * deltaZ;
+
+  return {
+    pos: new THREE.Vector3(0, y, z),
+    // optional yaw adjustments could be added here
+  };
+});
+
+// targets for smooth animation
+let currentPreset = 0;
+const cameraTargetPos = new THREE.Vector3().copy(camera.position);
+let cameraTargetLook = headTarget.clone();
+
+const cameraTmpObj = new THREE.Object3D();
+
+// IntersectionObserver to detect main visible section
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = sections.indexOf(entry.target);
+      if (idx >= 0 && idx !== currentPreset) {
+        currentPreset = idx;
+        const preset = sectionPresets[idx];
+        cameraTargetPos.copy(preset.pos);
+        // ensure look target uses current headTarget (may not be set until model loads)
+        cameraTargetLook = headTarget.clone();
+      }
+    }
+  });
+}, { threshold: 0.55 });
+
+sections.forEach(s => io.observe(s));
+
+// animation loop: smooth camera moves & lookAt interpolation
 function animate() {
   requestAnimationFrame(animate);
-  currentY = lerp(currentY, targetY, 0.08);
-  currentX = lerp(currentX, targetX, 0.08);
 
+  // if model not yet loaded, headTarget remains fallback; otherwise it's updated on load
+  // Smoothly move camera position
+  camera.position.lerp(cameraTargetPos, 0.08);
+
+  // Smoothly interpolate orientation to look at cameraTargetLook
+  cameraTmpObj.position.copy(camera.position);
+  cameraTmpObj.lookAt(cameraTargetLook);
+  camera.quaternion.slerp(cameraTmpObj.quaternion, 0.08);
+
+  // subtle idle movement (very small) to avoid perfectly static background
   if (model) {
-    model.rotation.y = currentY;
-    model.rotation.x = currentX;
+    model.rotation.y += 0.0005; // almost imperceptible slow motion
   }
 
   renderer.render(scene, camera);
 }
 animate();
 
-// Optional: reduce rendering when tab not visible (節能)
+// reduce rendering when not visible
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) renderer.setAnimationLoop(null);
   else renderer.setAnimationLoop(animate);
