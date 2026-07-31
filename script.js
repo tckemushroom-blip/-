@@ -34,6 +34,8 @@ let model = null;
 let modelSize = new THREE.Vector3();
 let modelCenter = new THREE.Vector3();
 let headTarget = new THREE.Vector3(0, 1.2, 0); // fallback
+// target rotation (radians) driven by page scroll
+let targetModelRotationY = 0;
 
 // Expose a minimal debug object early so Console can access scene/camera/renderer even before model loads
 window.__portfolio3d = {
@@ -144,6 +146,15 @@ const cameraTargetPos = new THREE.Vector3().copy(camera.position);
 let cameraTargetLook = headTarget.clone();
 const cameraTmpObj = new THREE.Object3D();
 
+// update targetModelRotationY from page scroll (0..1 -> 0..4π = 2 full rotations)
+window.addEventListener('scroll', () => {
+  const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  const viewHeight = window.innerHeight;
+  const maxScroll = Math.max(1, docHeight - viewHeight);
+  const t = window.scrollY / maxScroll;
+  targetModelRotationY = t * Math.PI * 4; // 2 full rotations across the entire page
+}, { passive: true });
+
 // create IO but DO NOT observe until model is loaded (sections.forEach moved into loader success)
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -173,7 +184,10 @@ function renderLoop() {
   cameraTmpObj.lookAt(cameraTargetLook);
   camera.quaternion.slerp(cameraTmpObj.quaternion, 0.08);
 
-  if (model) model.rotation.y += 0.0005;
+  if (model) {
+    // smooth toward scroll-driven target rotation
+    model.rotation.y += (targetModelRotationY - model.rotation.y) * 0.08;
+  }
 
   renderer.render(scene, camera);
 }
