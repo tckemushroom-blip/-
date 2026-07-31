@@ -120,10 +120,17 @@ loader.load(modelUrl,
     // fit camera to model bounding sphere so model is guaranteed in view
     const sphere = new THREE.Sphere();
     box.getBoundingSphere(sphere);
+    // sanitize values — fall back to reasonable defaults if bbox gives non-finite numbers
+    if (!isFinite(sphere.radius) || sphere.radius <= 0) {
+      sphere.radius = Math.max(modelSize.x, modelSize.y, modelSize.z) * 0.5 || 1.0;
+    }
+    if (!isFinite(modelCenter.x) || !isFinite(modelCenter.y) || !isFinite(modelCenter.z)) {
+      modelCenter = new THREE.Vector3(0, modelSize.y * 0.5 || 0.6, 0);
+    }
     const fitFactor = 1.6;
-    const fitDist = sphere.radius * fitFactor;
+    const fitDist = Math.abs(sphere.radius * fitFactor);
     // position camera slightly above center and back along Z
-    camera.position.set(modelCenter.x, modelCenter.y + sphere.radius * 0.9, modelCenter.z + fitDist);
+    camera.position.set(modelCenter.x || 0, (modelCenter.y || 0) + sphere.radius * 0.9, (modelCenter.z || 0) + fitDist);
     camera.lookAt(modelCenter);
     camera.updateProjectionMatrix();
     // update camera targets used by the animation loop
