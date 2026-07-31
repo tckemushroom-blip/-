@@ -32,6 +32,16 @@ let modelSize = new THREE.Vector3();
 let modelCenter = new THREE.Vector3();
 let headTarget = new THREE.Vector3(0, 1.2, 0); // fallback
 
+// Expose debug object early so Console can access it even before model loads
+window.__portfolio3d = {
+  scene,
+  camera,
+  renderer,
+  get model() { return model; },
+  headTarget,
+  debugShowCube: (v = true) => { showDebugCube = v; console.log('debug cube visible:', showDebugCube); }
+};
+
 // debug cube to confirm renderer is working
 const debugGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
 const debugMat = new THREE.MeshStandardMaterial({ color: 0xff4444 });
@@ -75,6 +85,9 @@ loader.load('./me.glb',
 
     // hide debug cube once model is visible
     showDebugCube = false;
+
+    // START observing sections only after model is added — avoids camera race conditions
+    sections.forEach(s => io.observe(s));
   },
   (xhr) => {
     // progress - optional
@@ -101,7 +114,7 @@ function resize() {
 new ResizeObserver(resize).observe(container);
 resize();
 
-// sections and presets
+// sections and presets (define but don't observe yet)
 const hero = document.querySelector('.hero');
 const panels = Array.from(document.querySelectorAll('main .panel'));
 const sections = hero ? [hero, ...panels] : panels;
@@ -119,6 +132,7 @@ const cameraTargetPos = new THREE.Vector3().copy(camera.position);
 let cameraTargetLook = headTarget.clone();
 const cameraTmpObj = new THREE.Object3D();
 
+// create IO but DO NOT observe until model is loaded (sections.forEach moved into loader success)
 const io = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -132,7 +146,6 @@ const io = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.55 });
-sections.forEach(s => io.observe(s));
 
 // render loop
 function renderLoop() {
