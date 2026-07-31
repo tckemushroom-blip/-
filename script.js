@@ -1,0 +1,89 @@
+import * as THREE from 'three';
+import { GLTFLoader } from 'https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js';
+
+window.THREE = THREE;
+const container = document.getElementById('scene');
+const scene = new THREE.Scene();
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+container.appendChild(renderer.domElement);
+
+const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+camera.position.set(0, 1.5, 2.6);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0); scene.add(hemi);
+const dir = new THREE.DirectionalLight(0xffffff, 1.2); dir.position.set(5,10,7); scene.add(dir);
+
+let model = null;
+let modelSize = new THREE.Vector3();
+let targetModelRotationY = 0;
+
+let statusOverlay = document.getElementById('model-status');
+if (!statusOverlay) {
+  statusOverlay = document.createElement('div'); statusOverlay.id='model-status'; statusOverlay.className='model-status'; document.body.appendChild(statusOverlay);
+}
+statusOverlay.textContent = '3D model: initializing...';
+
+// debug cube if no model
+const debugGeo = new THREE.BoxGeometry(0.6,0.6,0.6);
+const debugMat = new THREE.MeshStandardMaterial({ color:0xff4444 });
+const debugCube = new THREE.Mesh(debugGeo, debugMat); debugCube.position.set(0,1.0,0); scene.add(debugCube);
+let showDebugCube = true;
+
+function resize(){
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || window.innerHeight;
+  renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(container); resize();
+
+// attempt to load assets/me.glb relative to this module
+const loader = new GLTFLoader();
+const modelUrl = new URL('./assets/me.glb', import.meta.url).href;
+loader.load(modelUrl,
+  (gltf) => {
+    model = gltf.scene;
+    scene.add(model);
+    // compute bbox and scale
+    const box = new THREE.Box3().setFromObject(model);
+    box.getSize(modelSize);
+    const maxDim = Math.max(modelSize.x, modelSize.y, modelSize.z) || 1;
+    const scale = Math.max(0.03, Math.min(3, 1.1 / maxDim));
+    model.scale.setScalar(scale);
+    const box2 = new THREE.Box3().setFromObject(model);
+    box2.getSize(modelSize);
+
+    // center
+    const center = new THREE.Vector3(); box2.getCenter(center);
+    model.position.sub(center);
+
+    // hide debug cube
+    showDebugCube = false; debugCube.visible = false;
+    statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')})`;
+  },
+  (xhr) => {
+    if (xhr && xhr.loaded && xhr.total){ let pct = Math.round((xhr.loaded/xhr.total)*100); pct = Math.max(0,Math.min(100,pct)); statusOverlay.textContent = `3D model: loading ${pct}%`; }
+  },
+  (err) => {
+    console.error('GLTF load error', err); statusOverlay.textContent = '3D model: not found or load error (place assets/me.glb)'; showDebugCube = true; debugCube.visible = true;
+  }
+);
+
+// scroll -> rotation
+window.addEventListener('scroll', ()=>{
+  const doc = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  const view = window.innerHeight; const max = Math.max(1, doc - view); const t = window.scrollY / max;
+  targetModelRotationY = t * Math.PI * 4;
+},{passive:true});
+
+function renderLoop(){
+  if (showDebugCube) debugCube.rotation.y += 0.02; else debugCube.rotation.y = 0;
+  if (model) model.rotation.y += (targetModelRotationY - model.rotation.y) * 0.08;
+  renderer.render(scene, camera);
+}
+renderer.setAnimationLoop(renderLoop);
+
+document.addEventListener('visibilitychange', ()=>{ if (document.hidden) renderer.setAnimationLoop(null); else renderer.setAnimationLoop(renderLoop); });
+
+// local test hint printed to console
+console.log('Starter template loaded. To test locally: python -m http.server 8000 (from repo root) then open http://localhost:8000');

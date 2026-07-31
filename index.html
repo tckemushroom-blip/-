@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>作品集範本</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="簡易作品集範本，請把 me.glb 放到 assets/me.glb" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.154.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="scene" aria-hidden="true"></div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>範本作品集</h1>
+      <p>把你的 3D 模型放到 <code>assets/me.glb</code>，重新整理頁面即可載入。</p>
+      <a class="cta" href="#projects">查看範例區</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="projects" class="panel">
+      <h2>Projects / 作品</h2>
+      <p>範本頁面 — 上傳你的資產至 <code>assets/</code> 後可透過 script.js 載入。</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>© 2026 你的名字</small>
+  </footer>
+
+  <div id="model-status" aria-hidden="true" class="model-status">3D model: initializing...</div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
