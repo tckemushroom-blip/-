@@ -80,11 +80,17 @@ window.__portfolio3d.debugShowCube = (v = true) => {
 
 const loader = new GLTFLoader();
 
-// NOTE: load from repo root './me.glb' (change to './assets/me.glb' if you move the file)
-loader.load('./me.glb',
+// NOTE: resolve me.glb relative to this module file so it works under Pages sub-paths
+const modelUrl = new URL('./me.glb', import.meta.url).href;
+loader.load(modelUrl,
   (gltf) => {
     console.log('GLTF loaded', gltf);
     model = gltf.scene;
+
+    try { statusOverlay.textContent = '3D model: loaded'; } catch (e) {}
+    // hide debug cube when model is visible
+    showDebugCube = false;
+    debugCube.visible = false;
 
     // compute bounding box and log sizes for debugging
     const boxBefore = new THREE.Box3().setFromObject(model);
@@ -120,7 +126,8 @@ loader.load('./me.glb',
   (xhr) => {
     // progress - optional
     if (xhr && xhr.loaded && xhr.total) {
-      const pct = Math.round((xhr.loaded / xhr.total) * 100);
+      let pct = Math.round((xhr.loaded / xhr.total) * 100);
+      pct = Math.max(0, Math.min(100, pct)); // clamp 0..100 to avoid >100
       // update overlay with percent
       try { statusOverlay.textContent = `3D model: loading ${pct}%`; } catch (e) { /* ignore */ }
     }
