@@ -57,9 +57,9 @@ loader.load(modelUrl,
     const center = new THREE.Vector3(); box2.getCenter(center);
     model.position.sub(center);
 
-    // move model DOWN by 25% of its bbox height
+    // move model DOWN by 50% of its bbox height (additional 25%)
     try {
-      const downward = modelSize.y * 0.25 || 0;
+      const downward = modelSize.y * 0.5 || 0;
       model.position.y -= downward;
     } catch (e) { /* ignore */ }
 
