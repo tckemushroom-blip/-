@@ -134,8 +134,8 @@ loader.load(modelUrl,
       model.position.y -= extraDown;
     } catch (e) { /* ignore */ }
 
-    // enlarge model so the final scale is approximately 270% of the baseline (user requested)
-    try { model.scale.multiplyScalar(2.7); } catch (e) { }
+    // enlarge model so the final scale is approximately 250% of the baseline (user requested)
+    try { model.scale.multiplyScalar(2.5); } catch (e) { }
 
     // try to find a node that looks like the head (name contains 'head')
     let headNode = null;
