@@ -166,12 +166,54 @@ loader.load(modelUrl,
   }
 );
 
-// scroll -> rotation
-window.addEventListener('scroll', ()=>{
-  const doc = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-  const view = window.innerHeight; const max = Math.max(1, doc - view); const t = window.scrollY / max;
-  targetModelRotationY = t * Math.PI * 4;
-},{passive:true});
+// wheel-based scroll with resistance + snap-to-section
+(function(){
+  // build list of snap sections (header, panels, footer)
+  const sections = Array.from(document.querySelectorAll('header, main .panel, footer'));
+  const pagePositions = sections.map(s => s.offsetTop);
+  let currentPage = 0;
+  let scrollAccum = 0;
+  let scrollTimeout = null;
+  const snapThreshold = 120; // pixels of accumulated wheel delta before snapping
+  const snapResetMs = 220;
+
+  function clampPage(i){ return Math.max(0, Math.min(pagePositions.length - 1, i)); }
+  function snapToPage(idx){ idx = clampPage(idx); currentPage = idx; const top = pagePositions[idx] || 0; window.scrollTo({ top, behavior: 'smooth' }); // rotate model toward page index
+    targetModelRotationY = idx * Math.PI * 1.2; }
+
+  // gentle mapping while wheel is moving (resistance)
+  window.addEventListener('wheel', (e)=>{
+    // intercept default scroll so snapping feels consistent
+    try{ e.preventDefault(); }catch(e){ /* ignore */ }
+    // accumulate delta and apply resistant rotation influence
+    const dy = e.deltaY;
+    scrollAccum += dy;
+    // small immediate rotation feedback (resisted)
+    targetModelRotationY += dy * 0.0006; // tuned sensitivity
+
+    // restart debounce
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(()=>{
+      // if user scrolled enough, snap
+      if (Math.abs(scrollAccum) > snapThreshold) {
+        if (scrollAccum > 0) snapToPage(currentPage + 1); else snapToPage(currentPage - 1);
+      } else {
+        // not enough: smoothly return to currentPage's rotation target
+        targetModelRotationY = currentPage * Math.PI * 1.2;
+      }
+      scrollAccum = 0;
+    }, snapResetMs);
+  }, { passive: false });
+
+  // update currentPage on normal scroll (in case user uses page links / keyboard)
+  window.addEventListener('scroll', ()=>{
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    // find nearest page
+    let best = 0; let bestDist = Infinity;
+    for (let i=0;i<pagePositions.length;i++){ const d = Math.abs((pagePositions[i]||0) - y); if (d < bestDist){ bestDist = d; best = i; } }
+    currentPage = best;
+  }, { passive: true });
+})();
 
 function renderLoop(){
   if (showDebugCube) debugCube.rotation.y += 0.02; else debugCube.rotation.y = 0;
