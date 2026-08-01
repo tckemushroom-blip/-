@@ -64,9 +64,16 @@ const loader = new GLTFLoader();
 const modelUrl = new URL('./assets/me.glb', import.meta.url).href;
 loader.load(modelUrl,
   (gltf) => {
-    model = gltf.scene;
+    // wrap the loaded scene in a stable root so translations/offsets apply reliably
+    const modelRoot = new THREE.Object3D();
+    modelRoot.name = 'modelRoot';
+    // enable shadows / nice defaults on meshes
+    gltf.scene.traverse((n) => { if (n.isMesh) { n.castShadow = true; n.receiveShadow = true; n.material && (n.material.side = THREE.DoubleSide); } });
+    modelRoot.add(gltf.scene);
+    model = modelRoot; // keep the existing 'model' handle but it's now the root container
     scene.add(model);
-    // compute bbox and scale
+
+    // compute bbox and scale from the root
     const box = new THREE.Box3().setFromObject(model);
     box.getSize(modelSize);
     const maxDim = Math.max(modelSize.x, modelSize.y, modelSize.z) || 1;
@@ -75,7 +82,7 @@ loader.load(modelUrl,
     const box2 = new THREE.Box3().setFromObject(model);
     box2.getSize(modelSize);
 
-    // center
+    // center root
     const center = new THREE.Vector3(); box2.getCenter(center);
     model.position.sub(center);
 
