@@ -57,19 +57,32 @@ loader.load(modelUrl,
     const center = new THREE.Vector3(); box2.getCenter(center);
     model.position.sub(center);
 
-    // compute bounding sphere and fit camera to occupy most of viewport
+    // move model DOWN by 25% of its bbox height
+    try {
+      const downward = modelSize.y * 0.25 || 0;
+      model.position.y -= downward;
+    } catch (e) { /* ignore */ }
+
+    // recompute bbox and sphere after shift
+    const boxAfter = new THREE.Box3().setFromObject(model);
+    boxAfter.getSize(modelSize);
+
     const sphere = new THREE.Sphere();
-    box2.getBoundingSphere(sphere);
+    boxAfter.getBoundingSphere(sphere);
     if (!isFinite(sphere.radius) || sphere.radius <= 0) {
       sphere.radius = Math.max(modelSize.x, modelSize.y, modelSize.z) * 0.5 || 1.0;
     }
+
+    // update center based on new bbox
+    const newCenter = new THREE.Vector3(); boxAfter.getCenter(newCenter);
+
+    // adjust camera for fuller appearance
     camera.fov = 50;
     const desiredFraction = 0.78;
     const fovRad = THREE.MathUtils.degToRad(camera.fov);
     const distance = Math.abs(sphere.radius) / (Math.tan(fovRad * 0.5) * desiredFraction);
-    // base camera positioned relative to model center
-    camera.position.set(center.x || 0, (center.y || 0) + sphere.radius * 0.15, (center.z || 0) + Math.abs(distance));
-    camera.lookAt(center);
+    camera.position.set(newCenter.x || 0, (newCenter.y || 0) + sphere.radius * 0.15, (newCenter.z || 0) + Math.abs(distance));
+    camera.lookAt(newCenter);
     camera.updateProjectionMatrix();
 
     // enlarge model to 160%
@@ -84,13 +97,13 @@ loader.load(modelUrl,
       const headWorld = new THREE.Vector3();
       headNode.getWorldPosition(headWorld);
       // compute delta between head and model center and shift camera to keep head centered
-      const delta = headWorld.clone().sub(center);
+      const delta = headWorld.clone().sub(newCenter);
       camera.position.add(delta);
       camera.lookAt(headWorld);
       camera.updateProjectionMatrix();
-      statusOverlay.textContent = `3D model: loaded (head centered)`;
+      statusOverlay.textContent = `3D model: loaded (head centered, shifted down 25%)`;
     } else {
-      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')})`;
+      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down 25%)`;
     }
 
     // hide debug cube
