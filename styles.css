@@ -9,8 +9,8 @@ body> *:not(#scene){position:relative;z-index:1}
 .cta{display:inline-block;padding:8px 14px;background:var(--accent);color:#022;border-radius:8px;text-decoration:none;font-weight:600}
 .panel{min-height:100vh;padding:3rem 6% 3rem 8rem;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.92));border-top:1px solid rgba(0,0,0,0.03);display:flex;align-items:center}
 
-.panel-inner{display:grid;grid-template-columns:36% 1fr;gap:3.5rem;align-items:start;width:100%}
-.panel-left{padding-right:1rem}
+.panel-inner{display:grid;grid-template-columns:36% 1fr;gap:3.5rem;align-items:stretch;width:100%}
+.panel-left{padding-right:1rem; display:flex; align-items:center; height:100%}
 .panel-right{max-width:60ch}
 
 /* make major headings sit left and visually prominent */
