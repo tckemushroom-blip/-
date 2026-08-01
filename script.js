@@ -187,7 +187,24 @@ loader.load(modelUrl,
   const snapResetMs = 220;
 
   function clampPage(i){ return Math.max(0, Math.min(pagePositions.length - 1, i)); }
-  function snapToPage(idx){ idx = clampPage(idx); currentPage = idx; const top = pagePositions[idx] || 0; window.scrollTo({ top, behavior: 'smooth' }); // rotate model toward page index
+  function doSnapVisual(direction){
+    try{
+      const mainEl = document.querySelector('main'); if(!mainEl) return;
+      const cls = direction > 0 ? 'snap-bump-up' : 'snap-bump-down';
+      // toggle class to trigger CSS transform animation
+      mainEl.classList.remove('snap-bump-up','snap-bump-down');
+      // force reflow
+      void mainEl.offsetWidth;
+      mainEl.classList.add(cls);
+      setTimeout(()=>{ mainEl.classList.remove(cls); }, 300);
+    }catch(e){/* ignore */}
+  }
+  function snapToPage(idx){
+    idx = clampPage(idx);
+    const dir = Math.sign(idx - currentPage) || 0;
+    if(dir !== 0) doSnapVisual(dir);
+    currentPage = idx;
+    const top = pagePositions[idx] || 0; window.scrollTo({ top, behavior: 'smooth' }); // rotate model toward page index
     targetModelRotationY = idx * Math.PI * 1.2; }
 
   // gentle mapping while wheel is moving (resistance)
