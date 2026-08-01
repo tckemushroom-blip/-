@@ -57,6 +57,24 @@ loader.load(modelUrl,
     const center = new THREE.Vector3(); box2.getCenter(center);
     model.position.sub(center);
 
+    // compute bounding sphere and fit camera to occupy most of viewport
+    const sphere = new THREE.Sphere();
+    box2.getBoundingSphere(sphere);
+    if (!isFinite(sphere.radius) || sphere.radius <= 0) {
+      sphere.radius = Math.max(modelSize.x, modelSize.y, modelSize.z) * 0.5 || 1.0;
+    }
+    // wider FOV and desired fraction of viewport to fill
+    camera.fov = 50;
+    const desiredFraction = 0.78; // 0..1 fraction of viewport height to occupy
+    const fovRad = THREE.MathUtils.degToRad(camera.fov);
+    const distance = Math.abs(sphere.radius) / (Math.tan(fovRad * 0.5) * desiredFraction);
+    camera.position.set(center.x || 0, (center.y || 0) + sphere.radius * 0.15, (center.z || 0) + Math.abs(distance));
+    camera.lookAt(center);
+    camera.updateProjectionMatrix();
+
+    // slightly enlarge model for stronger presence
+    try { model.scale.multiplyScalar(1.18); } catch (e) { }
+
     // hide debug cube
     showDebugCube = false; debugCube.visible = false;
     statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')})`;
