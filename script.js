@@ -168,9 +168,14 @@ loader.load(modelUrl,
 
 // wheel-based scroll with resistance + snap-to-section
 (function(){
-  // build list of snap sections (header, panels, footer)
-  const sections = Array.from(document.querySelectorAll('header, main .panel, footer'));
-  const pagePositions = sections.map(s => s.offsetTop);
+  // use only main panels + footer as snap targets (exclude header which is fixed)
+  function getSections(){ return Array.from(document.querySelectorAll('main .panel, footer')); }
+  let sections = getSections();
+  let pagePositions = sections.map(s => s.offsetTop);
+  // refresh positions on resize or DOM changes
+  window.addEventListener('resize', ()=>{ sections = getSections(); pagePositions = sections.map(s => s.offsetTop); });
+  document.addEventListener('DOMContentLoaded', ()=>{ sections = getSections(); pagePositions = sections.map(s => s.offsetTop); });
+
   let currentPage = 0;
   let scrollAccum = 0;
   let scrollTimeout = null;
