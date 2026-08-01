@@ -11,6 +11,18 @@ container.appendChild(renderer.domElement);
 const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
 camera.position.set(0, 1.5, 2.6);
 
+// expose debug handle so Console can inspect and adjust scene at runtime
+window.__portfolio3d = {
+  scene,
+  camera,
+  renderer,
+  get model() { return model; },
+  setModelYOffset(delta) {
+    if (model) { model.position.y += delta; console.log('model.position after setModelYOffset:', model.position.toArray()); }
+    else console.warn('model not loaded yet');
+  }
+};
+
 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0); scene.add(hemi);
 const dir = new THREE.DirectionalLight(0xffffff, 1.2); dir.position.set(5,10,7); scene.add(dir);
 
