@@ -132,6 +132,10 @@ loader.load(modelUrl,
       const viewportWorldHeight = 2 * Math.abs(distance) * Math.tan(fovRad * 0.5);
       const extraDown = viewportWorldHeight * pageFraction;
       model.position.y -= extraDown;
+
+      // additionally move model DOWN by another 10% of the viewport height (user requested)
+      const extra10 = viewportWorldHeight * 0.10; // 10% more
+      model.position.y -= extra10;
     } catch (e) { /* ignore */ }
 
     // enlarge model so the final scale is approximately 250% of the baseline (user requested)
