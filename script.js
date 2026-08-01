@@ -126,6 +126,14 @@ loader.load(modelUrl,
     camera.lookAt(newCenter);
     camera.updateProjectionMatrix();
 
+    // move model DOWN by 30% of the page viewport height (in world units)
+    try {
+      const pageFraction = 0.30; // 30% of viewport
+      const viewportWorldHeight = 2 * Math.abs(distance) * Math.tan(fovRad * 0.5);
+      const extraDown = viewportWorldHeight * pageFraction;
+      model.position.y -= extraDown;
+    } catch (e) { /* ignore */ }
+
     // enlarge model so the final scale is approximately 300% of the baseline (user requested)
     try { model.scale.multiplyScalar(3.0); } catch (e) { }
 
@@ -142,9 +150,9 @@ loader.load(modelUrl,
       camera.position.add(delta);
       camera.lookAt(headWorld);
       camera.updateProjectionMatrix();
-      statusOverlay.textContent = `3D model: loaded (head centered, shifted down ~15.58%)`;
+      statusOverlay.textContent = `3D model: loaded (head centered, shifted down ~15.58% + 30% viewport)`;
     } else {
-      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down ~15.58%)`;
+      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down ~15.58% + 30% viewport)`;
     }
 
     // hide debug cube
