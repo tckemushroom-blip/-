@@ -9,9 +9,14 @@ body> *:not(#scene){position:relative;z-index:1}
 .cta{display:inline-block;padding:8px 14px;background:var(--accent);color:#022;border-radius:8px;text-decoration:none;font-weight:600}
 .panel{min-height:100vh;padding:3rem 6% 3rem 8rem;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.92));border-top:1px solid rgba(0,0,0,0.03);display:flex;align-items:center}
 
+.panel-inner{display:grid;grid-template-columns:36% 1fr;gap:3.5rem;align-items:start;width:100%}
+.panel-left{padding-right:1rem}
+.panel-right{max-width:60ch}
+
 /* make major headings sit left and visually prominent */
-.panel h2{margin:0 0 0 0;font-size:clamp(28px,4.2vw,48px);font-weight:700;text-align:left;max-width:60%}
-.panel h3, .panel h4{margin-top:0.75rem;color:var(--muted)}
+.panel-left h2{margin:0;font-size:clamp(32px,5.2vw,64px);font-weight:800;text-align:left}
+.panel-right h3, .panel-right h4{margin-top:0.75rem;color:var(--muted)}
+.panel-right p{margin-top:0.5rem;line-height:1.45}
 
 /* prefer one-section-per-screen behavior: enable scroll snapping as a progressive enhancement */
 html,body{scroll-behavior:smooth}
@@ -20,7 +25,10 @@ body{scroll-snap-type:y mandatory}
 
 @media (max-width:900px){
   .panel{min-height:70vh;padding:2rem 6%}
-  .panel h2{font-size:28px;max-width:100%}
+  .panel-inner{display:block}
+  .panel-left{padding-right:0;margin-bottom:1rem}
+  .panel-left h2{font-size:28px}
+  .panel-right{max-width:100%}
 }
 .footer{padding:2rem 6%;text-align:center;color:var(--muted)}
 .model-status{position:fixed;bottom:12px;left:12px;padding:8px 12px;background:rgba(0,0,0,0.6);color:#fff;border-radius:6px;font-family:system-ui;font-size:13px;z-index:9999;pointer-events:none}
