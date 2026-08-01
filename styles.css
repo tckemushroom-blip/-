@@ -18,6 +18,16 @@ body> *:not(#scene){position:relative;z-index:1}
 .panel-right h3, .panel-right h4{margin-top:0.75rem;color:var(--muted)}
 .panel-right p{margin-top:0.5rem;line-height:1.45}
 
+/* overview navigation buttons */
+.nav-grid{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+.nav-button{display:inline-block;padding:14px 20px;border-radius:8px;border:2px solid #222;background:transparent;color:var(--text);text-decoration:none;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,0.06);transition:transform .12s ease, background .12s ease}
+.nav-button:hover{background:rgba(0,0,0,0.04);transform:translateY(-3px)}
+
+@media (max-width:900px){
+  .nav-grid{flex-direction:column}
+  .nav-button{width:100%;text-align:center}
+}
+
 /* prefer one-section-per-screen behavior: enable scroll snapping as a progressive enhancement */
 html,body{scroll-behavior:smooth}
 body{scroll-snap-type:y mandatory}
