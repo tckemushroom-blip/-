@@ -18,8 +18,18 @@ window.__portfolio3d = {
   renderer,
   get model() { return model; },
   setModelYOffset(delta) {
-    if (model) { model.position.y += delta; console.log('model.position after setModelYOffset:', model.position.toArray()); }
-    else console.warn('model not loaded yet');
+    if (!model) { console.warn('model not loaded yet'); return null; }
+    // sanitize current position
+    const p = model.position;
+    if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) {
+      console.warn('model.position contained non-finite values, resetting to (0,0,0)');
+      model.position.set(0,0,0);
+    }
+    const before = model.position.toArray();
+    model.position.y += delta;
+    const after = model.position.toArray();
+    console.log('setModelYOffset before:', before, 'after:', after);
+    return after;
   }
 };
 
@@ -74,6 +84,16 @@ loader.load(modelUrl,
       const downward = modelSize.y * 2.0 || 0;
       model.position.y -= downward;
     } catch (e) { /* ignore */ }
+
+    // SANITIZE model.position: ensure finite values (fix NaN/Infinity issues)
+    try {
+      const p = model.position;
+      if (!isFinite(p.x) || !isFinite(p.y) || !isFinite(p.z)) {
+        console.warn('Model position contained non-finite values, resetting to 0,0,0');
+        p.set(0, 0, 0);
+        model.position.copy(p);
+      }
+    } catch(e) { }
 
     // recompute bbox and sphere after shift
     const boxAfter = new THREE.Box3().setFromObject(model);
