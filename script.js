@@ -86,9 +86,9 @@ loader.load(modelUrl,
     const center = new THREE.Vector3(); box2.getCenter(center);
     model.position.sub(center);
 
-    // move model DOWN by 25% of its bbox height (reduced)
+    // move model DOWN by the user-confirmed fraction of its bbox height (~15.58%)
     try {
-      const downward = modelSize.y * 0.25 || 0;
+      const downward = modelSize.y * 0.15581351405983007 || 0;
       model.position.y -= downward;
     } catch (e) { /* ignore */ }
 
@@ -140,9 +140,9 @@ loader.load(modelUrl,
       camera.position.add(delta);
       camera.lookAt(headWorld);
       camera.updateProjectionMatrix();
-      statusOverlay.textContent = `3D model: loaded (head centered, shifted down 25%)`;
+      statusOverlay.textContent = `3D model: loaded (head centered, shifted down ~15.58%)`;
     } else {
-      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down 25%)`;
+      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down ~15.58%)`;
     }
 
     // hide debug cube
