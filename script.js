@@ -196,7 +196,7 @@ loader.load(modelUrl,
       // force reflow
       void mainEl.offsetWidth;
       mainEl.classList.add(cls);
-      setTimeout(()=>{ mainEl.classList.remove(cls); }, 300);
+      setTimeout(()=>{ mainEl.classList.remove(cls); }, 200);
     }catch(e){/* ignore */}
   }
   function snapToPage(idx){

@@ -47,8 +47,8 @@ body{scroll-snap-type:y mandatory}
 main, footer, .panel{position:relative;z-index:0}
 
 /* quick vertical snap-bump visual when switching sections */
-main.snap-bump-up{transform:translateY(-6vh);transition:transform 260ms cubic-bezier(.2,.9,.2,1);will-change:transform}
-main.snap-bump-down{transform:translateY(6vh);transition:transform 260ms cubic-bezier(.2,.9,.2,1);will-change:transform}
+main.snap-bump-up{transform:translate3d(0,-2vh,0);transition:transform 160ms ease-out;will-change:transform}
+main.snap-bump-down{transform:translate3d(0,2vh,0);transition:transform 160ms ease-out;will-change:transform}
 .footer{padding:2rem 6%;text-align:center;color:var(--muted)}
 .model-status{position:fixed;bottom:12px;left:12px;padding:8px 12px;background:rgba(0,0,0,0.6);color:#fff;border-radius:6px;font-family:system-ui;font-size:13px;z-index:9999;pointer-events:none}
 @media (max-width:900px){#scene{position:relative;height:40vh;margin-bottom:1.25rem}}
