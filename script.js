@@ -121,6 +121,8 @@ loader.load(modelUrl,
     const fovRad = THREE.MathUtils.degToRad(camera.fov);
     const distance = Math.abs(sphere.radius) / (Math.tan(fovRad * 0.5) * desiredFraction);
     camera.position.set(newCenter.x || 0, (newCenter.y || 0) + sphere.radius * 0.15, (newCenter.z || 0) + Math.abs(distance));
+    // additionally lift the camera up by 25% of the bounding sphere radius (user requested)
+    try { camera.position.y += Math.abs(sphere.radius) * 0.25; } catch(e) { /* ignore */ }
     camera.lookAt(newCenter);
     camera.updateProjectionMatrix();
 
