@@ -126,8 +126,8 @@ loader.load(modelUrl,
     camera.lookAt(newCenter);
     camera.updateProjectionMatrix();
 
-    // enlarge model to 160%
-    try { model.scale.multiplyScalar(1.6); } catch (e) { }
+    // enlarge model so the final scale is approximately 300% of the baseline (user requested)
+    try { model.scale.multiplyScalar(3.0); } catch (e) { }
 
     // try to find a node that looks like the head (name contains 'head')
     let headNode = null;
