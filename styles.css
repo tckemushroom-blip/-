@@ -5,6 +5,8 @@
   --muted:#f2f2f2;
   --accent:#a3a3a3;
   --frosted-width:80vw;
+  --content-left:45%;
+  --content-width:50%;
   --font-heavy:"華康新特黑體","Arial Black","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
   --font-bold:"華康粗黑體(P)","華康粗黑體","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
   --font-regular:"Microsoft JhengHei","微軟正黑體",sans-serif;
@@ -76,13 +78,14 @@ html{scroll-padding-top:5vh}
   align-items:center;
   scroll-margin-top:calc(5vh + 0.5rem);
 }
-.panel-inner{display:block;margin-left:45%;width:55%}
+.panel-inner{display:block;margin-left:var(--content-left);width:var(--content-width)}
 .panel-left{padding-right:1rem;margin-bottom:30pt}
 .panel-right{max-width:100%}
 
 .panel-left h2{
-  margin:0 0 0 5vw;
-  font-size:clamp(42px,6.75vw,90px);`r`n  font-family:var(--font-heavy);
+  margin:0 0 0 0;
+  font-size:clamp(42px,6.75vw,90px);
+  font-family:var(--font-heavy);
   text-align:left;
   letter-spacing:0.3em;
   max-width:var(--frosted-width);
@@ -92,7 +95,7 @@ html{scroll-padding-top:5vh}
 .panel-left h2.intro-title{font-size:clamp(28px,4.5vw,60px)}
 .panel-right h3,
 .panel-right h4{
-  margin-left:5vw;
+  margin-left:0;
   max-width:var(--frosted-width);
   color:var(--text);
   text-shadow:0 1px 4px rgba(0,0,0,0.2);
@@ -103,7 +106,7 @@ html{scroll-padding-top:5vh}
 .panel-right p{
   margin-top:0;
   margin-bottom:0;
-  margin-left:5vw;
+  margin-left:0;
   line-height:30pt;
   font-family:var(--font-regular);
   font-weight:400;
@@ -125,7 +128,7 @@ html{scroll-padding-top:5vh}
 .contact-info a{text-decoration:none}
 
 .software-icons{
-  margin-left:5vw;
+  margin-left:0;
   display:flex;
   flex-wrap:wrap;
   gap:14px;
