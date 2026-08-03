@@ -56,7 +56,7 @@ html{scroll-padding-top:5vh}
   color:#68615f;
   text-decoration:none;
   font-family:var(--font-bold);
-  font-weight:700;
+  font-weight:200;
   font-size:clamp(12px,1.1vw,15px);
   transition:background-size 0.7s ease 0.3s, color 0.7s ease 0.3s;
 }
@@ -97,8 +97,8 @@ html{scroll-padding-top:5vh}
   color:var(--text);
   text-shadow:0 1px 4px rgba(0,0,0,0.2);
 }
-.panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:700;font-size:25pt;line-height:25pt;letter-spacing:0.3em}
-.panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:700;font-size:25pt}
+.panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:200;font-size:25pt;line-height:25pt;letter-spacing:0.3em}
+.panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:200;font-size:25pt}
 .panel-right p{
   margin-top:0;
   margin-bottom:0;
