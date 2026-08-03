@@ -86,6 +86,7 @@ html{scroll-padding-top:5vh}
   margin:0 0 0 0;
   font-size:clamp(42px,6.75vw,90px);
   font-family:var(--font-heavy);
+  font-weight:400;
   text-align:left;
   letter-spacing:0.3em;
   max-width:var(--frosted-width);
