@@ -1,5 +1,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from 'https://unpkg.com/three@0.154.0/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://unpkg.com/three@0.154.0/examples/jsm/postprocessing/RenderPass.js';
+import { ShaderPass } from 'https://unpkg.com/three@0.154.0/examples/jsm/postprocessing/ShaderPass.js';
+import { HorizontalBlurShader } from 'https://unpkg.com/three@0.154.0/examples/jsm/shaders/HorizontalBlurShader.js';
+import { VerticalBlurShader } from 'https://unpkg.com/three@0.154.0/examples/jsm/shaders/VerticalBlurShader.js';
 
 window.THREE = THREE;
 const container = document.getElementById('scene');
@@ -7,6 +12,10 @@ const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 container.appendChild(renderer.domElement);
+
+// setup post-processing composer (will be initialized after camera/size known)
+let composer, renderPass, hBlurPass, vBlurPass, finalMixPass;
+let originalRenderTarget;
 
 const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
 camera.position.set(0, 1.5, 2.6);
@@ -52,12 +61,65 @@ const debugMat = new THREE.MeshStandardMaterial({ color:0xff4444 });
 const debugCube = new THREE.Mesh(debugGeo, debugMat); debugCube.position.set(0,1.0,0); scene.add(debugCube);
 let showDebugCube = true;
 
+function initPostProcessing(w,h){
+  // original render target
+  originalRenderTarget = new THREE.WebGLRenderTarget(w, h, { format: THREE.RGBAFormat });
+  // composer
+  composer = new EffectComposer(renderer);
+  renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+  // blur passes
+  hBlurPass = new ShaderPass(HorizontalBlurShader);
+  vBlurPass = new ShaderPass(VerticalBlurShader);
+  // set initial blur strength (will adjust on resize)
+  hBlurPass.uniforms.h.value = 0.0025;
+  vBlurPass.uniforms.v.value = 0.0025;
+  composer.addPass(hBlurPass);
+  composer.addPass(vBlurPass);
+
+  // final mix pass: mixes original scene and blurred scene according to overlay x-based mask
+  const finalMixShader = {
+    uniforms: {
+      tDiffuse: { value: null }, // blurred (from previous passes)
+      tOriginal: { value: null },
+      overlayLeft: { value: 0.2 }, // normalized left edge of overlay
+      overlayWidth: { value: 0.8 }
+    },
+    vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: `uniform sampler2D tDiffuse; uniform sampler2D tOriginal; uniform float overlayLeft; uniform float overlayWidth; varying vec2 vUv;
+      void main(){ vec4 blurCol = texture2D(tDiffuse, vUv); vec4 origCol = texture2D(tOriginal, vUv);
+        float t = clamp((vUv.x - overlayLeft) / overlayWidth, 0.0, 1.0);
+        // right->left mapping: t==1 is right-most of overlay, t==0 is left edge
+        // full effect for t <= 0.75, then fade to 0 between 0.75..1.0
+        float weight = 0.0;
+        if(t <= 0.75) weight = 1.0; else weight = 1.0 - (t - 0.75) / 0.25;
+        weight = clamp(weight, 0.0, 1.0);
+        gl_FragColor = mix(origCol, blurCol, weight);
+      }`
+  };
+  finalMixPass = new ShaderPass(finalMixShader);
+  composer.addPass(finalMixPass);
+}
+
 function resize(){
   const w = container.clientWidth || window.innerWidth;
   const h = container.clientHeight || window.innerHeight;
   renderer.setSize(w,h); camera.aspect = w/h; camera.updateProjectionMatrix();
+  if(composer){ composer.setSize(w,h); if(originalRenderTarget){ originalRenderTarget.setSize(w,h); }
+    // adjust blur based on resolution
+    const px = 1 / Math.max(1, w);
+    const strength = Math.min(0.01, 0.0025 * (window.devicePixelRatio || 1));
+    if(hBlurPass) hBlurPass.uniforms.h.value = strength;
+    if(vBlurPass) vBlurPass.uniforms.v.value = strength;
+    // compute overlayLeft normalized from CSS (overlay width 80vw)
+    const overlayWidthNorm = 0.8;
+    const overlayLeft = 1.0 - overlayWidthNorm;
+    if(finalMixPass) { finalMixPass.uniforms.overlayLeft.value = overlayLeft; finalMixPass.uniforms.overlayWidth.value = overlayWidthNorm; }
+  }
 }
 new ResizeObserver(resize).observe(container); resize();
+// initialize composer after first resize
+initPostProcessing(container.clientWidth || window.innerWidth, container.clientHeight || window.innerHeight);
 
 // attempt to load assets/me.glb relative to this module
 const loader = new GLTFLoader();
@@ -253,7 +315,14 @@ loader.load(modelUrl,
 function renderLoop(){
   if (showDebugCube) debugCube.rotation.y += 0.02; else debugCube.rotation.y = 0;
   if (model) model.rotation.y += (targetModelRotationY - model.rotation.y) * 0.08;
-  renderer.render(scene, camera);
+  try{
+    // render original to texture
+    if(originalRenderTarget){ renderer.setRenderTarget(originalRenderTarget); renderer.render(scene, camera); renderer.setRenderTarget(null); }
+    // provide original texture to final mix pass
+    if(finalMixPass && originalRenderTarget){ finalMixPass.uniforms.tOriginal.value = originalRenderTarget.texture; }
+    // render post-processed (blur) composer which will mix blurred and original
+    if(composer){ composer.render(); } else { renderer.render(scene,camera); }
+  }catch(e){ console.error('render error', e); renderer.render(scene,camera); }
 }
 renderer.setAnimationLoop(renderLoop);
 
