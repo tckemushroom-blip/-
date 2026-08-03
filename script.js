@@ -83,16 +83,28 @@ function initPostProcessing(w,h){
       tDiffuse: { value: null }, // blurred (from previous passes)
       tOriginal: { value: null },
       overlayLeft: { value: 0.2 }, // normalized left edge of overlay
-      overlayWidth: { value: 0.8 }
+      overlayWidth: { value: 0.8 },
+      fadeStart: { value: 0.85 }
     },
     vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-    fragmentShader: `uniform sampler2D tDiffuse; uniform sampler2D tOriginal; uniform float overlayLeft; uniform float overlayWidth; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D tDiffuse; uniform sampler2D tOriginal; uniform float overlayLeft; uniform float overlayWidth; uniform float fadeStart; varying vec2 vUv;
       void main(){ vec4 blurCol = texture2D(tDiffuse, vUv); vec4 origCol = texture2D(tOriginal, vUv);
-        float t = clamp((vUv.x - overlayLeft) / overlayWidth, 0.0, 1.0);
-        // right->left mapping: t==1 is right-most of overlay, t==0 is left edge
-        // full effect for t <= 0.75, then fade to 0 between 0.75..1.0
+        // determine if this fragment is inside the overlay region
+        float left = overlayLeft;
+        float right = overlayLeft + overlayWidth;
+        if(vUv.x < left || vUv.x > right){ gl_FragColor = origCol; return; }
+        // local progress within overlay: 0 at left edge, 1 at right edge
+        float local = (vUv.x - left) / overlayWidth;
+        // map to right->left t: 0 at rightmost, 1 at leftmost
+        float t = 1.0 - local;
         float weight = 0.0;
-        if(t <= 0.75) weight = 1.0; else weight = 1.0 - (t - 0.75) / 0.25;
+        if(t <= fadeStart){
+          // rightmost region (0 .. fadeStart) -> full effect
+          weight = 1.0;
+        } else {
+          // fade between fadeStart .. 1.0
+          weight = 1.0 - (t - fadeStart) / (1.0 - fadeStart);
+        }
         weight = clamp(weight, 0.0, 1.0);
         gl_FragColor = mix(origCol, blurCol, weight);
       }`
