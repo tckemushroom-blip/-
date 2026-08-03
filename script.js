@@ -224,6 +224,39 @@ loader.load(modelUrl,
     // enlarge model so the final scale is approximately 250% of the baseline (user requested)
     try { model.scale.multiplyScalar(2.5); } catch (e) { }
 
+    // add a point light to the model's right-top to enhance shading
+    try {
+      const rimLight = new THREE.PointLight(0xffffff, 1.2, Math.max(10, sphere.radius * 6), 2);
+      rimLight.name = 'modelRimLight';
+      rimLight.castShadow = false;
+      rimLight.position.set((newCenter.x || 0) + sphere.radius * 0.8, (newCenter.y || 0) + sphere.radius * 0.9, (newCenter.z || 0) + sphere.radius * 0.5);
+      scene.add(rimLight);
+      // small helper stored for runtime tweaks
+      window.__portfolio3d.rimLight = rimLight;
+    } catch (e) { /* ignore if sphere undefined */ }
+
+    // slightly desaturate model materials for subtler color
+    try {
+      model.traverse((n) => {
+        if (!n.isMesh) return;
+        const mats = Array.isArray(n.material) ? n.material : [n.material];
+        mats.forEach((mat) => {
+          try {
+            if (mat && mat.color) {
+              const hsl = { h: 0, s: 0, l: 0 };
+              mat.color.getHSL(hsl);
+              // reduce saturation by ~15%
+              mat.color.setHSL(hsl.h, Math.max(0, hsl.s * 0.85), hsl.l);
+            }
+            // if textured, tint slightly toward gray to reduce perceived saturation
+            if (mat && mat.map) {
+              if (mat.color) mat.color.lerp(new THREE.Color(0.55, 0.55, 0.55), 0.12);
+            }
+          } catch (e) { /* ignore per-material errors */ }
+        });
+      });
+    } catch (e) { /* ignore */ }
+
     // try to find a node that looks like the head (name contains 'head')
     let headNode = null;
     model.traverse((n) => {
