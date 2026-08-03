@@ -226,7 +226,7 @@ loader.load(modelUrl,
 
     // add a directional warm light from right-top toward left-bottom
     try {
-      const rimWarmColor = new THREE.Color().setHSL(0.125, 0.7, 0.55);
+      const rimWarmColor = new THREE.Color(0xEDBF83);
       const rimLightWarm = new THREE.DirectionalLight(rimWarmColor, 1.0);
       rimLightWarm.name = 'modelRimLightWarm';
       rimLightWarm.castShadow = false;
