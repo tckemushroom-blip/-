@@ -224,14 +224,16 @@ loader.load(modelUrl,
     // enlarge model so the final scale is approximately 250% of the baseline (user requested)
     try { model.scale.multiplyScalar(2.5); } catch (e) { }
 
-    // add a point light to the model's right-top (warm yellow) to enhance shading
+    // add a directional warm light from right-top toward left-bottom
     try {
       const rimWarmColor = new THREE.Color().setHSL(0.125, 0.7, 0.55);
-      const rimLightWarm = new THREE.PointLight(rimWarmColor, 2.0, Math.max(10, sphere.radius * 6), 2);
+      const rimLightWarm = new THREE.DirectionalLight(rimWarmColor, 1.0);
       rimLightWarm.name = 'modelRimLightWarm';
       rimLightWarm.castShadow = false;
-      rimLightWarm.position.set((newCenter.x || 0) + sphere.radius * 0.8, (newCenter.y || 0) + sphere.radius * 0.9, (newCenter.z || 0) + sphere.radius * 0.5);
+      rimLightWarm.position.set((newCenter.x || 0) + sphere.radius * 1.2, (newCenter.y || 0) + sphere.radius * 1.2, (newCenter.z || 0) + sphere.radius * 0.6);
+      rimLightWarm.target.position.set((newCenter.x || 0) - sphere.radius * 0.8, (newCenter.y || 0) - sphere.radius * 0.8, (newCenter.z || 0));
       scene.add(rimLightWarm);
+      scene.add(rimLightWarm.target);
       window.__portfolio3d.rimLightWarm = rimLightWarm;
     } catch (e) { /* ignore */ }
 
