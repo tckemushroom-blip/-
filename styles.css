@@ -131,6 +131,7 @@ html{scroll-padding-top:5vh}
 .dot-item{margin-top:0;line-height:15pt;letter-spacing:0.15em}
 .exp-list .exp-h3{margin-top:0;margin-bottom:20pt;line-height:25pt;letter-spacing:0.3em}
 .exp-list p{margin-top:0;line-height:30pt;letter-spacing:0.15em}
+.exp-list .top3{font-weight:700}
 .exp-line{margin-top:0;line-height:30pt;letter-spacing:0.15em}
 .title-bold{font-family:var(--font-bold);font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,0.35)}
 
