@@ -114,7 +114,9 @@ html{scroll-padding-top:5vh}
 #cheng .panel-right p{line-height:15pt}
 #cheng .panel-right h3{margin-bottom:30pt}
 #cheng .intro-summary{margin-bottom:30pt;text-align:justify;text-align-last:justify}
-#cheng .intro-edu{text-align:justify;text-align-last:justify}
+#cheng .intro-edu{text-align:left}
+#cheng .intro-edu .edu-seg{display:inline-block}
+#cheng .intro-edu .edu-seg + .edu-seg{margin-left:1.5em}
 .contact-info p{font-size:12pt;line-height:30pt;letter-spacing:0.15em}
 .contact-info a{text-decoration:none}
 
