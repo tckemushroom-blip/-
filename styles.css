@@ -154,11 +154,13 @@ html{scroll-padding-top:5vh}
   transform:translateY(-50%);
   display:flex;
   flex-direction:column;
+  align-items:flex-end;
   gap:14px;
   z-index:4;
 }
 #graphic .experience-tab{
   position:relative;
+  flex:0 0 auto;
   width:58px;
   height:150px;
   border:none;
@@ -245,6 +247,7 @@ body{scroll-snap-type:y mandatory}
     left:auto;
     transform:none;
     flex-direction:row;
+    align-items:stretch;
     gap:10px;
     margin-bottom:1.5rem;
   }
