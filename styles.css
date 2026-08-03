@@ -91,6 +91,7 @@ html{scroll-padding-top:5vh}
   color:var(--text);
   text-shadow:1px 2px 8px rgba(0,0,0,0.3),0 0 2px rgba(0,0,0,0.15);
 }
+.panel-left h2.intro-title{font-size:clamp(28px,4.5vw,60px)}
 .panel-right h3,
 .panel-right h4{
   margin-left:5vw;
@@ -145,7 +146,8 @@ body{scroll-snap-type:y mandatory}
   .panel-inner{display:block;margin-left:0;width:100%}
   .panel-left{padding-right:0;margin-bottom:1rem}
   .panel-left h2{font-size:24px;margin-left:3vw}
-  .panel-right h3,.panel-right h4,.panel-right p{margin-left:3vw}
+  .panel-left h2.intro-title{font-size:clamp(28px,4.5vw,60px)}
+.panel-right h3,.panel-right h4,.panel-right p{margin-left:3vw}
 }
 
 main,footer,.panel{position:relative;z-index:2}
