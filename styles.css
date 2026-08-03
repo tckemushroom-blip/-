@@ -44,7 +44,7 @@ body{scroll-snap-type:y mandatory}
 }
 
 /* ensure panels don't create stacking contexts that hide fixed header */
-main, footer, .panel{position:relative;z-index:0}
+main, footer, .panel{position:relative;z-index:2}
 
 /* quick vertical snap-bump visual when switching sections */
 main.snap-bump-up{transform:translate3d(0,-2vh,0);transition:transform 160ms ease-out;will-change:transform}
@@ -53,5 +53,5 @@ main.snap-bump-down{transform:translate3d(0,2vh,0);transition:transform 160ms ea
 .model-status{position:fixed;bottom:12px;left:12px;padding:8px 12px;background:rgba(0,0,0,0.6);color:#fff;border-radius:6px;font-family:system-ui;font-size:13px;z-index:9999;pointer-events:none}
 
 /* right-to-left frosted glass overlay: 65% of viewport width from right edge */
-#frosted{position:fixed;top:0;right:0;height:100vh;width:65vw;pointer-events:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:linear-gradient(to left, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 35%, rgba(255,255,255,0.0) 100%);z-index:-1;mix-blend-mode:normal;mask-image:linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));}
+#frosted{position:fixed;top:0;right:0;height:100vh;width:80vw;pointer-events:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);/* color #a5a5a5 with opacity tied to gradient stops */background:linear-gradient(to left, rgba(165,165,165,0.85) 0%, rgba(165,165,165,0.45) 40%, rgba(165,165,165,0.12) 70%, rgba(165,165,165,0.0) 100%);z-index:0;mask-image:linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));}
 @media (max-width:900px){#scene{position:relative;height:40vh;margin-bottom:1.25rem}}
