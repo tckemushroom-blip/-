@@ -17,7 +17,7 @@ container.appendChild(renderer.domElement);
 let composer, renderPass, hBlurPass, vBlurPass, finalMixPass;
 let originalRenderTarget;
 
-const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(32, container.clientWidth / container.clientHeight, 0.1, 100);
 camera.position.set(0, 1.5, 2.6);
 
 // expose debug handle so Console can inspect and adjust scene at runtime
@@ -54,6 +54,19 @@ if (!statusOverlay) {
   statusOverlay = document.createElement('div'); statusOverlay.id='model-status'; statusOverlay.className='model-status'; document.body.appendChild(statusOverlay);
 }
 statusOverlay.textContent = '3D model: initializing...';
+
+function syncIntroEducationWidth(){
+  try {
+    const summary = document.querySelector('#cheng .intro-summary');
+    const block = document.querySelector('#cheng .intro-block');
+    const edu = document.querySelector('#cheng .intro-edu');
+    if (!summary || !block || !edu) return;
+    const width = Math.ceil(summary.getBoundingClientRect().width || 0);
+    if (!isFinite(width) || width <= 0) return;
+    block.style.width = `${width}px`;
+    edu.style.width = '100%';
+  } catch (e) { /* ignore */ }
+}
 
 // debug cube if no model
 const debugGeo = new THREE.BoxGeometry(0.6,0.6,0.6);
@@ -128,8 +141,13 @@ function resize(){
     const overlayLeft = 1.0 - overlayWidthNorm;
     if(finalMixPass) { finalMixPass.uniforms.overlayLeft.value = overlayLeft; finalMixPass.uniforms.overlayWidth.value = overlayWidthNorm; }
   }
+  syncIntroEducationWidth();
 }
 new ResizeObserver(resize).observe(container); resize();
+window.addEventListener("load", syncIntroEducationWidth);
+window.addEventListener("resize", syncIntroEducationWidth);
+document.addEventListener("DOMContentLoaded", syncIntroEducationWidth);
+if (document.fonts && document.fonts.ready) { document.fonts.ready.then(syncIntroEducationWidth); }
 // initialize composer after first resize
 initPostProcessing(container.clientWidth || window.innerWidth, container.clientHeight || window.innerHeight);
 
@@ -190,7 +208,7 @@ loader.load(modelUrl,
     const newCenter = new THREE.Vector3(); boxAfter.getCenter(newCenter);
 
     // adjust camera for fuller appearance
-    camera.fov = 50;
+    camera.fov = 32;
     const desiredFraction = 0.78;
     const fovRad = THREE.MathUtils.degToRad(camera.fov);
     const distance = Math.abs(sphere.radius) / (Math.tan(fovRad * 0.5) * desiredFraction);
