@@ -82,10 +82,11 @@ html{scroll-padding-top:5vh}
 
 .panel-left h2{
   margin:0 0 0 5vw;
-  font-size:clamp(28px,4.5vw,60px);
+  font-size:clamp(42px,6.75vw,90px);
   font-weight:1000;
   font-family:var(--font-heavy);
   text-align:left;
+  letter-spacing:0.3em;
   max-width:var(--frosted-width);
   color:var(--text);
   text-shadow:1px 2px 8px rgba(0,0,0,0.3),0 0 2px rgba(0,0,0,0.15);
