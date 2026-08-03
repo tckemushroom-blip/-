@@ -109,6 +109,8 @@ html{scroll-padding-top:5vh}
   font-size:12pt;
 }
 .panel-right a{color:var(--text)}
+.contact-info p{font-size:1.17em}
+.contact-info a{text-decoration:none}
 
 .dot-item{margin-top:0.25rem;line-height:1.45}
 .exp-list .exp-h3{margin-top:1.1rem;margin-bottom:0.1rem}
