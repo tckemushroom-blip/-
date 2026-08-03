@@ -103,7 +103,7 @@ html{scroll-padding-top:5vh}
   margin-top:0;
   margin-bottom:0;
   margin-left:5vw;
-  line-height:15pt;
+  line-height:30pt;
   font-family:var(--font-regular);
   font-weight:400;
   color:var(--text);
@@ -111,7 +111,8 @@ html{scroll-padding-top:5vh}
   letter-spacing:0.15em;
 }
 .panel-right a{color:var(--text)}
-.contact-info p{font-size:12pt;line-height:15pt;letter-spacing:0.15em}
+#cheng .panel-right p{line-height:15pt}
+.contact-info p{font-size:12pt;line-height:30pt;letter-spacing:0.15em}
 .contact-info a{text-decoration:none}
 
 .software-icons{
@@ -128,7 +129,7 @@ html{scroll-padding-top:5vh}
   object-fit:contain;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));
 }
-.dot-item{margin-top:0;line-height:15pt;letter-spacing:0.15em}
+.dot-item{margin-top:0;line-height:30pt;letter-spacing:0.15em}
 .exp-list .exp-h3{margin-top:0;margin-bottom:20pt;line-height:25pt;letter-spacing:0.3em}
 .exp-list p{margin-top:0;line-height:30pt;letter-spacing:0.15em}
 .exp-list .top3{font-weight:700}
