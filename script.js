@@ -226,7 +226,7 @@ loader.load(modelUrl,
 
     // add a point light to the model's right-top (warm yellow) to enhance shading
     try {
-      const rimLightWarm = new THREE.PointLight(0xffcc00, 1.3, Math.max(10, sphere.radius * 6), 2);
+      const rimLightWarm = new THREE.PointLight(0xffcc00, 2.0, Math.max(10, sphere.radius * 6), 2);
       rimLightWarm.name = 'modelRimLightWarm';
       rimLightWarm.castShadow = false;
       rimLightWarm.position.set((newCenter.x || 0) + sphere.radius * 0.8, (newCenter.y || 0) + sphere.radius * 0.9, (newCenter.z || 0) + sphere.radius * 0.5);
@@ -236,7 +236,7 @@ loader.load(modelUrl,
 
     // add a point light to the model's left-bottom (cool cyan blue) with lower intensity
     try {
-      const rimLightCool = new THREE.PointLight(0x0099ff, 0.75, Math.max(8, sphere.radius * 5), 2);
+      const rimLightCool = new THREE.PointLight(0x0099ff, 1.6, Math.max(8, sphere.radius * 5), 2);
       rimLightCool.name = 'modelRimLightCool';
       rimLightCool.castShadow = false;
       rimLightCool.position.set((newCenter.x || 0) - sphere.radius * 0.7, (newCenter.y || 0) - sphere.radius * 0.8, (newCenter.z || 0) + sphere.radius * 0.5);
@@ -246,7 +246,7 @@ loader.load(modelUrl,
 
     // add a rect area light at the model's top to highlight details
     try {
-      const topAreaLight = new THREE.RectAreaLight(0xffffff, 0.6, sphere.radius * 1.5, sphere.radius * 1.2);
+      const topAreaLight = new THREE.RectAreaLight(0xffffff, 1.0, sphere.radius * 1.5, sphere.radius * 1.2);
       topAreaLight.name = 'modelTopAreaLight';
       topAreaLight.position.set((newCenter.x || 0), (newCenter.y || 0) + sphere.radius * 1.2, (newCenter.z || 0) + sphere.radius * 0.3);
       topAreaLight.lookAt(newCenter);
@@ -254,7 +254,7 @@ loader.load(modelUrl,
       window.__portfolio3d.topAreaLight = topAreaLight;
     } catch (e) { /* ignore */ }
 
-    // slightly desaturate model materials for subtler color (reduce by ~35% total: 0.65)
+    // desaturate model materials for subtler color (reduce by ~65% total: 0.35)
     try {
       model.traverse((n) => {
         if (!n.isMesh) return;
@@ -264,8 +264,8 @@ loader.load(modelUrl,
             if (mat && mat.color) {
               const hsl = { h: 0, s: 0, l: 0 };
               mat.color.getHSL(hsl);
-              // reduce saturation: 0.65 = 35% reduction
-              mat.color.setHSL(hsl.h, Math.max(0, hsl.s * 0.65), hsl.l);
+              // reduce saturation: 0.35 = 65% reduction
+              mat.color.setHSL(hsl.h, Math.max(0, hsl.s * 0.35), hsl.l);
             }
             if (mat && mat.map) {
               if (mat.color) mat.color.lerp(new THREE.Color(0.55, 0.55, 0.55), 0.12);
