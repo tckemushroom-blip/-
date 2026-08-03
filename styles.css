@@ -15,9 +15,9 @@ html{scroll-padding-top:5vh}
 .panel-left{padding-right:1rem; display:flex; align-items:center; height:100%}
 .panel-right{max-width:60ch}
 
-/* make major headings sit left and visually prominent */
-.panel-left h2{margin:0;font-size:clamp(32px,5.2vw,64px);font-weight:800;text-align:left}
-.panel-right h3, .panel-right h4{margin-top:0.75rem;color:var(--muted)}
+/* make major headings sit left and visually prominent, constrained to frosted overlay width */
+.panel-left h2{margin:0;font-size:clamp(32px,5.2vw,64px);font-weight:800;text-align:left;max-width:80vw}
+.panel-right h3, .panel-right h4{margin-top:0.75rem;color:var(--muted);max-width:80vw}
 .panel-right p{margin-top:0.5rem;line-height:1.45}
 
 /* overview navigation buttons */
