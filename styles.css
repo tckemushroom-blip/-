@@ -1,4 +1,4 @@
-:root{--bg:#f7f9fb;--panel:rgba(255,255,255,0.95);--text:#102022;--muted:#6b8f86;--accent:#a8e6cf}
+:root{--bg:#d8d8d8;--panel:rgba(255,255,255,0.95);--text:#102022;--muted:#6b8f86;--accent:#a8e6cf}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC","Microsoft JhengHei",Arial;background:var(--bg);color:var(--text);padding-top:5vh}
@@ -51,4 +51,7 @@ main.snap-bump-up{transform:translate3d(0,-2vh,0);transition:transform 160ms eas
 main.snap-bump-down{transform:translate3d(0,2vh,0);transition:transform 160ms ease-out;will-change:transform}
 .footer{padding:2rem 6%;text-align:center;color:var(--muted)}
 .model-status{position:fixed;bottom:12px;left:12px;padding:8px 12px;background:rgba(0,0,0,0.6);color:#fff;border-radius:6px;font-family:system-ui;font-size:13px;z-index:9999;pointer-events:none}
+
+/* right-to-left frosted glass overlay: 65% of viewport width from right edge */
+#frosted{position:fixed;top:0;right:0;height:100vh;width:65vw;pointer-events:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);background:linear-gradient(to left, rgba(255,255,255,0.55), rgba(255,255,255,0.0));z-index:1000;mix-blend-mode:normal}
 @media (max-width:900px){#scene{position:relative;height:40vh;margin-bottom:1.25rem}}
