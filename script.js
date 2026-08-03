@@ -234,14 +234,17 @@ loader.load(modelUrl,
       window.__portfolio3d.rimLightWarm = rimLightWarm;
     } catch (e) { /* ignore */ }
 
-    // add a point light to the model's left-bottom (cool cyan blue) with larger range and closer position
+    // add a directional light from the left-bottom (cool cyan blue)
     try {
-      const rimLightCool = new THREE.PointLight(0x0099ff, 1.6, Math.max(15, sphere.radius * 8), 1.0);
+      const rimLightCool = new THREE.DirectionalLight(0x0099ff, 1.6);
       rimLightCool.name = 'modelRimLightCool';
       rimLightCool.castShadow = false;
-      // position closer to model center and more to the left-bottom
-      rimLightCool.position.set((newCenter.x || 0) - sphere.radius * 1.2, (newCenter.y || 0) - sphere.radius * 1.1, (newCenter.z || 0) - sphere.radius * 0.3);
+      // position the light source
+      rimLightCool.position.set((newCenter.x || 0) - sphere.radius * 1.5, (newCenter.y || 0) - sphere.radius * 1.5, (newCenter.z || 0) + sphere.radius * 0.5);
+      // directional light points toward model center
+      rimLightCool.target.position.copy(newCenter);
       scene.add(rimLightCool);
+      scene.add(rimLightCool.target);
       window.__portfolio3d.rimLightCool = rimLightCool;
     } catch (e) { /* ignore */ }
 
