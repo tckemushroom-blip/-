@@ -54,19 +54,7 @@ if (!statusOverlay) {
   statusOverlay = document.createElement('div'); statusOverlay.id='model-status'; statusOverlay.className='model-status'; document.body.appendChild(statusOverlay);
 }
 statusOverlay.textContent = '3D model: initializing...';
-
-function syncIntroEducationWidth(){
-  try {
-    const summary = document.querySelector('#cheng .intro-summary');
-    const block = document.querySelector('#cheng .intro-block');
-    const edu = document.querySelector('#cheng .intro-edu');
-    if (!summary || !block || !edu) return;
-    const width = Math.ceil(summary.getBoundingClientRect().width || 0);
-    if (!isFinite(width) || width <= 0) return;
-    block.style.width = `${width}px`;
-    edu.style.width = '100%';
-  } catch (e) { /* ignore */ }
-}
+`r`n}
 
 // debug cube if no model
 const debugGeo = new THREE.BoxGeometry(0.6,0.6,0.6);
@@ -141,13 +129,8 @@ function resize(){
     const overlayLeft = 1.0 - overlayWidthNorm;
     if(finalMixPass) { finalMixPass.uniforms.overlayLeft.value = overlayLeft; finalMixPass.uniforms.overlayWidth.value = overlayWidthNorm; }
   }
-  syncIntroEducationWidth();
 }
 new ResizeObserver(resize).observe(container); resize();
-window.addEventListener("load", syncIntroEducationWidth);
-window.addEventListener("resize", syncIntroEducationWidth);
-document.addEventListener("DOMContentLoaded", syncIntroEducationWidth);
-if (document.fonts && document.fonts.ready) { document.fonts.ready.then(syncIntroEducationWidth); }
 // initialize composer after first resize
 initPostProcessing(container.clientWidth || window.innerWidth, container.clientHeight || window.innerHeight);
 

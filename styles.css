@@ -114,8 +114,8 @@ html{scroll-padding-top:5vh}
 .panel-right a{color:var(--text)}
 #cheng .panel-right p{line-height:15pt}
 #cheng .panel-right h3{margin-bottom:30pt}
-#cheng .intro-block{display:inline-block;width:max-content;max-width:100%}
-#cheng .intro-summary{margin-bottom:15pt;text-align:left;display:inline-block}
+#cheng .intro-block{display:inline-block;max-width:100%}
+#cheng .intro-summary{margin-bottom:15pt;text-align:left;display:block;white-space:nowrap}
 #cheng .intro-edu{display:flex;align-items:baseline;justify-content:space-between;width:100%}
 #cheng .intro-edu .edu-seg{flex:1;min-width:0}
 #cheng .intro-edu .edu-seg:nth-child(1){text-align:left}
