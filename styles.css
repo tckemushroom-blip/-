@@ -123,7 +123,7 @@ html{scroll-padding-top:5vh}
   align-items:center;
   margin-bottom:20pt;
 }
-.software-icons img{
+ .software-icons img{
   width:42px;
   height:42px;
   object-fit:contain;
@@ -169,3 +169,4 @@ main.snap-bump-down{transform:translate3d(0,2vh,0);transition:transform 160ms ea
 }
 
 @media (max-width:900px){#scene{position:relative;height:40vh;margin-bottom:1.25rem}}
+.software-icons img.rhino-icon{background:#2f2f2f;padding:6px;border-radius:8px}
