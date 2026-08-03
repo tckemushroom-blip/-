@@ -82,9 +82,7 @@ html{scroll-padding-top:5vh}
 
 .panel-left h2{
   margin:0 0 0 5vw;
-  font-size:clamp(42px,6.75vw,90px);
-  font-weight:1000;
-  font-family:var(--font-heavy);
+  font-size:clamp(42px,6.75vw,90px);`r`n  font-family:var(--font-heavy);
   text-align:left;
   letter-spacing:0.3em;
   max-width:var(--frosted-width);
