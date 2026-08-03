@@ -99,6 +99,7 @@ html{scroll-padding-top:5vh}
 }
 .panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:200;font-size:25pt;line-height:25pt;letter-spacing:0.3em}
 .panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:200;font-size:25pt}
+.panel-right h3.cert-title{margin-bottom:15pt}
 .panel-right p{
   margin-top:0;
   margin-bottom:0;
@@ -126,7 +127,7 @@ html{scroll-padding-top:5vh}
   flex-wrap:wrap;
   gap:14px;
   align-items:center;
-  margin-bottom:20pt;
+  margin-bottom:40pt;
 }
  .software-icons img{
   width:42px;
