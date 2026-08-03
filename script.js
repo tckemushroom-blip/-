@@ -136,6 +136,15 @@ loader.load(modelUrl,
       // additionally move model DOWN by another 10% of the viewport height (user requested)
       const extra10 = viewportWorldHeight * 0.10; // 10% more
       model.position.y -= extra10;
+
+      // move model LEFT by 30% of the page viewport width (user requested)
+      try {
+        const viewportWorldWidth = viewportWorldHeight * (camera.aspect || (container.clientWidth / container.clientHeight));
+        const leftFraction = 0.30; // 30% of viewport width
+        const extraLeft = viewportWorldWidth * leftFraction;
+        // subtract to move left in world space
+        model.position.x -= extraLeft;
+      } catch(e) { /* ignore */ }
     } catch (e) { /* ignore */ }
 
     // enlarge model so the final scale is approximately 250% of the baseline (user requested)
