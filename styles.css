@@ -77,13 +77,13 @@ html{scroll-padding-top:5vh}
   scroll-margin-top:calc(5vh + 0.5rem);
 }
 .panel-inner{display:block;margin-left:45%;width:55%}
-.panel-left{padding-right:1rem;margin-bottom:1.5rem}
+.panel-left{padding-right:1rem;margin-bottom:30pt}
 .panel-right{max-width:100%}
 
 .panel-left h2{
   margin:0 0 0 5vw;
   font-size:clamp(28px,4.5vw,60px);
-  font-weight:900;
+  font-weight:1000;
   font-family:var(--font-heavy);
   text-align:left;
   max-width:var(--frosted-width);
@@ -97,25 +97,27 @@ html{scroll-padding-top:5vh}
   color:var(--text);
   text-shadow:0 1px 4px rgba(0,0,0,0.2);
 }
-.panel-right h3{margin-top:0.9rem;margin-bottom:0.2rem;font-family:var(--font-bold);font-weight:700}
+.panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:700;font-size:12pt;line-height:25pt;letter-spacing:0.3em}
 .panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:700}
 .panel-right p{
-  margin-top:0.35rem;
+  margin-top:0;
+  margin-bottom:0;
   margin-left:5vw;
-  line-height:1.55;
+  line-height:15pt;
   font-family:var(--font-regular);
   font-weight:400;
   color:var(--text);
   font-size:12pt;
+  letter-spacing:0.15em;
 }
 .panel-right a{color:var(--text)}
-.contact-info p{font-size:1.17em}
+.contact-info p{font-size:12pt;line-height:15pt;letter-spacing:0.15em}
 .contact-info a{text-decoration:none}
 
-.dot-item{margin-top:0.25rem;line-height:1.45}
-.exp-list .exp-h3{margin-top:1.1rem;margin-bottom:0.1rem}
-.exp-list p{margin-top:0.15rem;line-height:1.35}
-.exp-line{margin-top:0.45rem;line-height:1.4}
+.dot-item{margin-top:0;line-height:15pt;letter-spacing:0.15em}
+.exp-list .exp-h3{margin-top:0;margin-bottom:20pt;line-height:25pt;letter-spacing:0.3em}
+.exp-list p{margin-top:0;line-height:15pt;letter-spacing:0.15em}
+.exp-line{margin-top:0;line-height:15pt;letter-spacing:0.15em}
 .title-bold{font-family:var(--font-bold);font-weight:700}
 
 html,body{scroll-behavior:smooth}

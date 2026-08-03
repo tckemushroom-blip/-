@@ -234,6 +234,16 @@ loader.load(modelUrl,
       window.__portfolio3d.rimLightWarm = rimLightWarm;
     } catch (e) { /* ignore */ }
 
+    // add a white point light in front of the model
+    try {
+      const frontPointLight = new THREE.PointLight(0xffffff, 0.6, Math.max(10, sphere.radius * 6), 2);
+      frontPointLight.name = 'modelFrontPointLight';
+      frontPointLight.castShadow = false;
+      frontPointLight.position.set((newCenter.x || 0), (newCenter.y || 0), (newCenter.z || 0) + sphere.radius * 1.6);
+      scene.add(frontPointLight);
+      window.__portfolio3d.frontPointLight = frontPointLight;
+    } catch (e) { /* ignore */ }
+
     // add a directional light from the left-bottom (cool cyan blue) angled 45簞 toward right-top
     try {
       const rimLightCool = new THREE.DirectionalLight(0x0099ff, 1.6);
