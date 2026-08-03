@@ -105,8 +105,7 @@ html{scroll-padding-top:5vh}
   line-height:1.55;
   font-family:var(--font-regular);
   font-weight:400;
-  color:var(--text);
-}
+  color:var(--text);`r`n  font-size:12pt;`r`n}
 .panel-right a{color:var(--text)}
 
 .dot-item{margin-top:0.25rem;line-height:1.45}
