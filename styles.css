@@ -149,7 +149,7 @@ html{scroll-padding-top:5vh}
 #graphic{overflow:hidden}
 #graphic .experience-showcase{
   position:absolute;
-  left:0;
+  right:0;
   top:50%;
   transform:translateY(-50%);
   display:flex;
@@ -162,7 +162,7 @@ html{scroll-padding-top:5vh}
   width:58px;
   height:150px;
   border:none;
-  border-radius:0 24px 24px 0;
+  border-radius:24px 0 0 24px;
   overflow:hidden;
   display:flex;
   align-items:center;
@@ -177,7 +177,7 @@ html{scroll-padding-top:5vh}
 #graphic .experience-tab:hover,
 #graphic .experience-tab:focus-within{
   width:150px;
-  border-radius:0 24px 24px 0;
+  border-radius:24px 0 0 24px;
   box-shadow:0 14px 32px rgba(0,0,0,0.28);
 }
 #graphic .experience-tab img{
@@ -223,7 +223,7 @@ html{scroll-padding-top:5vh}
 #graphic .experience-tab:hover .experience-tab-label,
 #graphic .experience-tab:focus-within .experience-tab-label{
   opacity:0;
-  transform:translateX(-8px);
+  transform:translateX(8px);
 }
 
 html,body{scroll-behavior:smooth}
