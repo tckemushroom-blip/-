@@ -5,8 +5,8 @@
   --muted:#f2f2f2;
   --accent:#a3a3a3;
   --frosted-width:80vw;
-  --font-heavy:"Arial Black","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
-  --font-bold:"Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
+  --font-heavy:"華康新特黑體","Arial Black","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
+  --font-bold:"華康粗黑體(P)","華康粗黑體","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
   --font-regular:"Microsoft JhengHei","微軟正黑體",sans-serif;
 }
 *{box-sizing:border-box}
@@ -97,8 +97,8 @@ html{scroll-padding-top:5vh}
   color:var(--text);
   text-shadow:0 1px 4px rgba(0,0,0,0.2);
 }
-.panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:700;font-size:12pt;line-height:25pt;letter-spacing:0.3em}
-.panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:700}
+.panel-right h3{margin-top:0;margin-bottom:20pt;font-family:var(--font-bold);font-weight:700;font-size:25pt;line-height:25pt;letter-spacing:0.3em}
+.panel-right h4{margin-top:0.6rem;font-family:var(--font-bold);font-weight:700;font-size:25pt}
 .panel-right p{
   margin-top:0;
   margin-bottom:0;
