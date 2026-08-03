@@ -54,7 +54,7 @@ if (!statusOverlay) {
   statusOverlay = document.createElement('div'); statusOverlay.id='model-status'; statusOverlay.className='model-status'; document.body.appendChild(statusOverlay);
 }
 statusOverlay.textContent = '3D model: initializing...';
-`r`n}
+
 
 // debug cube if no model
 const debugGeo = new THREE.BoxGeometry(0.6,0.6,0.6);
