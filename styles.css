@@ -5,7 +5,7 @@
   --muted:#f2f2f2;
   --accent:#a3a3a3;
   --frosted-width:80vw;
-  --font-heavy:"Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
+  --font-heavy:"Arial Black","Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
   --font-bold:"Microsoft JhengHei UI","Microsoft JhengHei","微軟正黑體",sans-serif;
   --font-regular:"Microsoft JhengHei","微軟正黑體",sans-serif;
 }
@@ -118,7 +118,7 @@ html{scroll-padding-top:5vh}
 .exp-list .exp-h3{margin-top:0;margin-bottom:20pt;line-height:25pt;letter-spacing:0.3em}
 .exp-list p{margin-top:0;line-height:15pt;letter-spacing:0.15em}
 .exp-line{margin-top:0;line-height:15pt;letter-spacing:0.15em}
-.title-bold{font-family:var(--font-bold);font-weight:700}
+.title-bold{font-family:var(--font-bold);font-weight:900;text-shadow:0 2px 6px rgba(0,0,0,0.35)}
 
 html,body{scroll-behavior:smooth}
 body{scroll-snap-type:y mandatory}

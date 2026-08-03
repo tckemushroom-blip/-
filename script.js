@@ -226,7 +226,8 @@ loader.load(modelUrl,
 
     // add a point light to the model's right-top (warm yellow) to enhance shading
     try {
-      const rimLightWarm = new THREE.PointLight(0xffcc00, 2.0, Math.max(10, sphere.radius * 6), 2);
+      const rimWarmColor = new THREE.Color().setHSL(0.125, 0.7, 0.55);
+      const rimLightWarm = new THREE.PointLight(rimWarmColor, 2.0, Math.max(10, sphere.radius * 6), 2);
       rimLightWarm.name = 'modelRimLightWarm';
       rimLightWarm.castShadow = false;
       rimLightWarm.position.set((newCenter.x || 0) + sphere.radius * 0.8, (newCenter.y || 0) + sphere.radius * 0.9, (newCenter.z || 0) + sphere.radius * 0.5);
