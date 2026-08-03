@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'https://unpkg.com/three@0.154.0/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://unpkg.com/three@0.154.0/examples/jsm/postprocessing/RenderPass.js';
@@ -211,10 +211,10 @@ loader.load(modelUrl,
       const extra10 = viewportWorldHeight * 0.10; // 10% more
       model.position.y -= extra10;
 
-      // move model LEFT by 30% of the page viewport width (user requested)
+      // move model LEFT by 35% of the page viewport width (user requested)
       try {
         const viewportWorldWidth = viewportWorldHeight * (camera.aspect || (container.clientWidth / container.clientHeight));
-        const leftFraction = 0.30; // 30% of viewport width
+        const leftFraction = 0.35; // 35% of viewport width
         const extraLeft = viewportWorldWidth * leftFraction;
         // subtract to move left in world space
         model.position.x -= extraLeft;
@@ -234,14 +234,14 @@ loader.load(modelUrl,
       window.__portfolio3d.rimLightWarm = rimLightWarm;
     } catch (e) { /* ignore */ }
 
-    // add a directional light from the left-bottom (cool cyan blue) angled 45° toward right-top
+    // add a directional light from the left-bottom (cool cyan blue) angled 45簞 toward right-top
     try {
       const rimLightCool = new THREE.DirectionalLight(0x0099ff, 1.6);
       rimLightCool.name = 'modelRimLightCool';
       rimLightCool.castShadow = false;
       // position light source to the left-bottom
       rimLightCool.position.set((newCenter.x || 0) - sphere.radius * 2.0, (newCenter.y || 0) - sphere.radius * 2.0, (newCenter.z || 0) + sphere.radius * 0.5);
-      // point light toward right-top of model (opposite direction: 45° angle)
+      // point light toward right-top of model (opposite direction: 45簞 angle)
       rimLightCool.target.position.set((newCenter.x || 0) + sphere.radius * 1.0, (newCenter.y || 0) + sphere.radius * 1.0, (newCenter.z || 0));
       scene.add(rimLightCool);
       scene.add(rimLightCool.target);
@@ -294,7 +294,7 @@ loader.load(modelUrl,
       camera.updateProjectionMatrix();
       statusOverlay.textContent = `3D model: loaded (head centered, shifted down ~15.58% + 30% viewport)`;
     } else {
-      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('×')}, shifted down ~15.58% + 30% viewport)`;
+      statusOverlay.textContent = `3D model: loaded (bbox ${modelSize.toArray().map(n=>n.toFixed(3)).join('?')}, shifted down ~15.58% + 30% viewport)`;
     }
 
     // hide debug cube

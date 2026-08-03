@@ -53,7 +53,7 @@ html{scroll-padding-top:5vh}
   background:linear-gradient(to right, rgba(163,163,163,0) 0%, rgba(163,163,163,1) 100%);
   background-size:0% 100%;
   background-repeat:no-repeat;
-  color:#a3a3a3;
+  color:#68615f;
   text-decoration:none;
   font-family:var(--font-bold);
   font-weight:700;
@@ -105,7 +105,9 @@ html{scroll-padding-top:5vh}
   line-height:1.55;
   font-family:var(--font-regular);
   font-weight:400;
-  color:var(--text);`r`n  font-size:12pt;`r`n}
+  color:var(--text);
+  font-size:12pt;
+}
 .panel-right a{color:var(--text)}
 
 .dot-item{margin-top:0.25rem;line-height:1.45}
