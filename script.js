@@ -450,9 +450,58 @@ function withoutDetailTransition(callback) {
   });
 }
 
+const DETAIL_TRANSITION_MS = 1300;
+let detailTransitionTimer = 0;
+
+function clearDetailTransitionState() {
+  if (detailTransitionTimer) {
+    clearTimeout(detailTransitionTimer);
+    detailTransitionTimer = 0;
+  }
+  document.body.classList.remove('detail-returning', 'detail-switching');
+  detailPages.forEach((page) => {
+    page.classList.remove('is-leaving-left', 'is-leaving-right');
+  });
+}
+
+function switchDetailPage(nextKey) {
+  const currentKey = document.body.getAttribute('data-active-detail');
+  const currentPage = currentKey ? detailPageMap[currentKey] : null;
+  const nextPage = detailPageMap[nextKey];
+  if (!nextPage) return;
+  if (!currentPage || currentPage === nextPage) {
+    openDetailPage(nextKey, { animate: true, pushHash: false });
+    return;
+  }
+
+  clearDetailTransitionState();
+  document.body.classList.add('detail-open', 'detail-switching');
+  document.body.setAttribute('data-active-detail', nextKey);
+  nextPage.classList.add('is-active');
+  void nextPage.offsetWidth;
+  currentPage.classList.add('is-leaving-left');
+
+  detailTransitionTimer = setTimeout(() => {
+    currentPage.classList.remove('is-active', 'is-leaving-left');
+    detailPages.forEach((page) => {
+      if (page !== nextPage) page.classList.remove('is-active');
+    });
+    document.body.classList.remove('detail-switching');
+    detailTransitionTimer = 0;
+  }, DETAIL_TRANSITION_MS);
+}
+
 function openDetailPage(detailKey, options = {}) {
   const page = detailPageMap[detailKey];
   if (!page) return;
+  const currentKey = document.body.getAttribute('data-active-detail');
+  if (options.animate && currentKey && currentKey !== detailKey) {
+    switchDetailPage(detailKey);
+    if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
+    return;
+  }
+
+  clearDetailTransitionState();
   const applyState = () => {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
     document.body.classList.add('detail-open');
@@ -468,13 +517,28 @@ function closeDetailPage(options = {}) {
   if (graphicSection) {
     graphicSection.scrollIntoView({ behavior: 'auto', block: 'start' });
   }
-  const applyState = () => {
-    detailPages.forEach((item) => item.classList.remove('is-active'));
-    document.body.classList.remove('detail-open');
-    document.body.removeAttribute('data-active-detail');
-  };
-  if (options.animate) applyState();
-  else withoutDetailTransition(applyState);
+  const currentKey = document.body.getAttribute('data-active-detail');
+  const currentPage = currentKey ? detailPageMap[currentKey] : null;
+
+  if (options.animate && currentPage) {
+    clearDetailTransitionState();
+    document.body.classList.add('detail-returning');
+    currentPage.classList.add('is-leaving-right');
+    detailTransitionTimer = setTimeout(() => {
+      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right'));
+      document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
+      document.body.removeAttribute('data-active-detail');
+      detailTransitionTimer = 0;
+    }, DETAIL_TRANSITION_MS);
+  } else {
+    clearDetailTransitionState();
+    const applyState = () => {
+      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right'));
+      document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
+      document.body.removeAttribute('data-active-detail');
+    };
+    withoutDetailTransition(applyState);
+  }
   if (options.pushHash !== false) history.pushState(null, '', '#graphic');
 }
 

@@ -22,8 +22,9 @@ body{
   padding-top:5vh;
 }
 body.detail-open{overflow:hidden}
-#site-shell{position:relative;min-height:100%;transition:transform 1.3s ease;will-change:transform}
+#site-shell{position:relative;min-height:100%;transition:transform 1.3s ease}
 body.detail-open #site-shell{transform:translateX(-100vw);pointer-events:none}
+body.detail-returning #site-shell{transform:translateX(0);pointer-events:none}
 body.detail-no-animate #site-shell,
 body.detail-no-animate .detail-page{transition:none !important}
 html{scroll-padding-top:5vh}
