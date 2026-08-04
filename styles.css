@@ -336,6 +336,14 @@ html{scroll-padding-top:5vh}
   pointer-events:none;
   z-index:1;
 }
+.detail-page.is-leaving-right::before{
+  opacity:0;
+  transition:none;
+}
+body.detail-returning .detail-page::before{
+  opacity:0;
+  transition:none;
+}
 .detail-page-inner{
   position:relative;
   z-index:1;
