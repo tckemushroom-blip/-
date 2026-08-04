@@ -452,6 +452,22 @@ function withoutDetailTransition(callback) {
 
 const DETAIL_TRANSITION_MS = 1300;
 let detailTransitionTimer = 0;
+const graphicShowcase = document.querySelector('#graphic .experience-showcase');
+
+function clearPressedButtons() {
+  document.querySelectorAll('.is-pressed-out').forEach((item) => item.classList.remove('is-pressed-out'));
+}
+
+function setButtonsHiddenForDetail(detailKey, hidden) {
+  const page = detailPageMap[detailKey];
+  if (!page) return;
+  page.classList.toggle('is-buttons-hidden', hidden);
+}
+
+function setButtonsHiddenForGraphic(hidden) {
+  if (!graphicShowcase) return;
+  graphicShowcase.classList.toggle('is-buttons-hidden', hidden);
+}
 
 function clearDetailTransitionState() {
   if (detailTransitionTimer) {
@@ -460,34 +476,43 @@ function clearDetailTransitionState() {
   }
   document.body.classList.remove('detail-returning', 'detail-switching');
   detailPages.forEach((page) => {
-    page.classList.remove('is-leaving-left', 'is-leaving-right');
+    page.classList.remove('is-leaving-left', 'is-leaving-right', 'is-buttons-hidden');
   });
+  setButtonsHiddenForGraphic(false);
+  clearPressedButtons();
 }
 
-function switchDetailPage(nextKey) {
+function finishDetailSwitch(nextPage, currentPage) {
+  if (currentPage) currentPage.classList.remove('is-active', 'is-leaving-left', 'is-leaving-right');
+  detailPages.forEach((page) => {
+    if (page !== nextPage) page.classList.remove('is-active', 'is-leaving-left', 'is-leaving-right');
+  });
+  if (nextPage) nextPage.classList.remove('is-buttons-hidden');
+  document.body.classList.remove('detail-switching', 'detail-returning');
+  clearPressedButtons();
+  detailTransitionTimer = 0;
+}
+
+function switchDetailPage(nextKey, trigger) {
   const currentKey = document.body.getAttribute('data-active-detail');
   const currentPage = currentKey ? detailPageMap[currentKey] : null;
   const nextPage = detailPageMap[nextKey];
   if (!nextPage) return;
   if (!currentPage || currentPage === nextPage) {
-    openDetailPage(nextKey, { animate: true, pushHash: false });
+    openDetailPage(nextKey, { animate: true, pushHash: false, trigger });
     return;
   }
 
   clearDetailTransitionState();
+  if (trigger) trigger.classList.add('is-pressed-out');
+  nextPage.classList.add('is-buttons-hidden');
   document.body.classList.add('detail-open', 'detail-switching');
   document.body.setAttribute('data-active-detail', nextKey);
   nextPage.classList.add('is-active');
-  void nextPage.offsetWidth;
   currentPage.classList.add('is-leaving-left');
 
   detailTransitionTimer = setTimeout(() => {
-    currentPage.classList.remove('is-active', 'is-leaving-left');
-    detailPages.forEach((page) => {
-      if (page !== nextPage) page.classList.remove('is-active');
-    });
-    document.body.classList.remove('detail-switching');
-    detailTransitionTimer = 0;
+    finishDetailSwitch(nextPage, currentPage);
   }, DETAIL_TRANSITION_MS);
 }
 
@@ -496,19 +521,30 @@ function openDetailPage(detailKey, options = {}) {
   if (!page) return;
   const currentKey = document.body.getAttribute('data-active-detail');
   if (options.animate && currentKey && currentKey !== detailKey) {
-    switchDetailPage(detailKey);
+    switchDetailPage(detailKey, options.trigger || null);
     if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
     return;
   }
 
   clearDetailTransitionState();
+  if (options.animate && options.trigger) options.trigger.classList.add('is-pressed-out');
+  if (options.animate) page.classList.add('is-buttons-hidden');
   const applyState = () => {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
     document.body.classList.add('detail-open');
     document.body.setAttribute('data-active-detail', detailKey);
   };
-  if (options.animate) applyState();
-  else withoutDetailTransition(applyState);
+  if (options.animate) {
+    applyState();
+    detailTransitionTimer = setTimeout(() => {
+      page.classList.remove('is-buttons-hidden');
+      clearPressedButtons();
+      detailTransitionTimer = 0;
+    }, DETAIL_TRANSITION_MS);
+  } else {
+    withoutDetailTransition(applyState);
+    page.classList.remove('is-buttons-hidden');
+  }
   if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
 }
 
@@ -522,20 +558,25 @@ function closeDetailPage(options = {}) {
 
   if (options.animate && currentPage) {
     clearDetailTransitionState();
+    if (options.trigger) options.trigger.classList.add('is-pressed-out');
+    setButtonsHiddenForGraphic(true);
     document.body.classList.add('detail-returning');
     currentPage.classList.add('is-leaving-right');
     detailTransitionTimer = setTimeout(() => {
-      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right'));
+      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right', 'is-buttons-hidden'));
       document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
+      setButtonsHiddenForGraphic(false);
+      clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
   } else {
     clearDetailTransitionState();
     const applyState = () => {
-      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right'));
+      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-right', 'is-buttons-hidden'));
       document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
+      setButtonsHiddenForGraphic(false);
     };
     withoutDetailTransition(applyState);
   }
@@ -548,9 +589,10 @@ function syncDetailPageFromHash() {
     openDetailPage(detailKey, { animate: false, pushHash: false });
   } else if (document.body.classList.contains('detail-open')) {
     withoutDetailTransition(() => {
-      detailPages.forEach((item) => item.classList.remove('is-active'));
-      document.body.classList.remove('detail-open');
+      detailPages.forEach((item) => item.classList.remove('is-active', 'is-leaving-left', 'is-leaving-right', 'is-buttons-hidden'));
+      document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
+      setButtonsHiddenForGraphic(false);
     });
   }
 }
@@ -561,7 +603,8 @@ document.addEventListener('click', (event) => {
     event.preventDefault();
     openDetailPage(openTrigger.getAttribute('data-open-detail'), {
       animate: openTrigger.getAttribute('data-open-mode') === 'slide',
-      pushHash: true
+      pushHash: true,
+      trigger: openTrigger
     });
     return;
   }
@@ -571,7 +614,8 @@ document.addEventListener('click', (event) => {
     event.preventDefault();
     closeDetailPage({
       animate: closeTrigger.getAttribute('data-close-mode') === 'slide',
-      pushHash: true
+      pushHash: true,
+      trigger: closeTrigger
     });
   }
 });
