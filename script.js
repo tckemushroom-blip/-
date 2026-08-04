@@ -452,6 +452,7 @@ function withoutDetailTransition(callback) {
 
 const DETAIL_TRANSITION_MS = 1300;
 let detailTransitionTimer = 0;
+let graphicHardHideTimer = 0;
 const graphicShowcase = document.querySelector('#graphic .experience-showcase');
 
 function clearPressedButtons() {
@@ -477,6 +478,10 @@ function clearDetailTransitionState() {
   if (detailTransitionTimer) {
     clearTimeout(detailTransitionTimer);
     detailTransitionTimer = 0;
+  }
+  if (graphicHardHideTimer) {
+    clearTimeout(graphicHardHideTimer);
+    graphicHardHideTimer = 0;
   }
   document.body.classList.remove('detail-returning', 'detail-switching', 'detail-entering');
   detailPages.forEach((page) => {
@@ -537,6 +542,10 @@ function openDetailPage(detailKey, options = {}) {
     options.trigger.classList.add('is-pressed-out');
     if (graphicShowcase && graphicShowcase.contains(options.trigger)) {
       setGraphicShowcaseTransitioning(true);
+      graphicHardHideTimer = setTimeout(() => {
+        setGraphicShowcaseHardHidden(true);
+        graphicHardHideTimer = 0;
+      }, 260);
     }
   }
   if (options.animate) page.classList.add('is-buttons-hidden');
@@ -554,6 +563,7 @@ function openDetailPage(detailKey, options = {}) {
       page.classList.remove('is-buttons-hidden');
       document.body.classList.remove('detail-entering');
       setGraphicShowcaseTransitioning(false);
+      setGraphicShowcaseHardHidden(false);
       clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
@@ -561,6 +571,7 @@ function openDetailPage(detailKey, options = {}) {
     withoutDetailTransition(applyState);
     page.classList.remove('is-buttons-hidden');
     document.body.classList.remove('detail-entering');
+    setGraphicShowcaseHardHidden(false);
   }
 
   if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
