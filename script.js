@@ -478,7 +478,7 @@ function clearDetailTransitionState() {
     clearTimeout(detailTransitionTimer);
     detailTransitionTimer = 0;
   }
-  document.body.classList.remove('detail-returning', 'detail-switching');
+  document.body.classList.remove('detail-returning', 'detail-switching', 'detail-entering');
   detailPages.forEach((page) => {
     page.classList.remove('is-leaving-left', 'is-leaving-right', 'is-buttons-hidden');
   });
@@ -548,9 +548,11 @@ function openDetailPage(detailKey, options = {}) {
   };
 
   if (options.animate) {
+    document.body.classList.add('detail-entering');
     applyState();
     detailTransitionTimer = setTimeout(() => {
       page.classList.remove('is-buttons-hidden');
+      document.body.classList.remove('detail-entering');
       setGraphicShowcaseTransitioning(false);
       clearPressedButtons();
       detailTransitionTimer = 0;
@@ -558,6 +560,7 @@ function openDetailPage(detailKey, options = {}) {
   } else {
     withoutDetailTransition(applyState);
     page.classList.remove('is-buttons-hidden');
+    document.body.classList.remove('detail-entering');
   }
 
   if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
