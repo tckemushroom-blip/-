@@ -382,11 +382,12 @@ html{scroll-padding-top:5vh}
 }
 .detail-side-nav{
   position:absolute;
-  left:0;
+  right:0;
   top:50%;
   transform:translateY(-50%);
   display:flex;
   flex-direction:column;
+  align-items:flex-end;
   gap:14px;
   z-index:2;
 }
@@ -410,7 +411,7 @@ html{scroll-padding-top:5vh}
 .detail-category-button{
   width:58px;
   height:150px;
-  border-radius:0 24px 24px 0;
+  border-radius:24px 0 0 24px;
   padding:12px 10px;
   transition:width 0.7s ease 0.3s, box-shadow 0.7s ease 0.3s;
 }
@@ -463,13 +464,13 @@ html{scroll-padding-top:5vh}
 .detail-category-button:hover .detail-category-label,
 .detail-category-button:focus-visible .detail-category-label{
   opacity:0;
-  transform:translateX(-8px);
+  transform:translateX(8px);
 }
 .detail-back-button{
   width:58px;
   height:75px;
-  border-radius:0 22px 22px 0;
-  background:linear-gradient(to right, rgba(163,163,163,0) 0%, rgba(163,163,163,1) 100%), rgba(234,206,197,0.68);
+  border-radius:22px 0 0 22px;
+  background:linear-gradient(to left, rgba(163,163,163,0) 0%, rgba(163,163,163,1) 100%), rgba(234,206,197,0.68);
   background-size:0% 100%, auto;
   background-repeat:no-repeat;
   transition:width 0.7s ease 0.3s, background-size 0.7s ease 0.3s, box-shadow 0.7s ease 0.3s;
@@ -495,7 +496,7 @@ html{scroll-padding-top:5vh}
 .detail-back-icon svg{width:100%;height:100%}
 .detail-back-button:hover .detail-back-icon,
 .detail-back-button:focus-visible .detail-back-icon{
-  transform:translateX(-3px);
+  transform:translateX(3px);
   color:#f2f2f2;
 }
 html,body{scroll-behavior:smooth}
@@ -543,6 +544,7 @@ body{scroll-snap-type:y mandatory}
   .detail-page-media{height:min(52vh,520px);padding:1rem}
   .detail-side-nav{
     position:relative;
+    right:auto;
     top:auto;
     transform:none;
     flex-direction:row;
