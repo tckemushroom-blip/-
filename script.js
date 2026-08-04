@@ -453,7 +453,13 @@ function withoutDetailTransition(callback) {
 const DETAIL_TRANSITION_MS = 1300;
 let detailTransitionTimer = 0;
 let graphicHardHideTimer = 0;
+let navTransitionTimer = 0;
+let navTransitionMidTimer = 0;
 const graphicShowcase = document.querySelector('#graphic .experience-showcase');
+const SECTION_IDS = ['cheng', 'graduation', 'graphic', 'photography'];
+const GRAPHIC_SECTION_INDEX = 2;
+const NAV_TRANSITION_MS = 260;
+const NAV_TRANSITION_SWITCH_MS = 110;
 
 function clearPressedButtons() {
   document.querySelectorAll('.is-pressed-out').forEach((item) => item.classList.remove('is-pressed-out'));
@@ -631,6 +637,81 @@ function syncDetailPageFromHash() {
     });
   }
 }
+
+function getCurrentSectionIndex() {
+  if (document.body.classList.contains('detail-open')) return GRAPHIC_SECTION_INDEX;
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  let bestIndex = 0;
+  let bestDistance = Infinity;
+  SECTION_IDS.forEach((id, index) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const distance = Math.abs(section.offsetTop - y);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+  return bestIndex;
+}
+
+function clearNavTransitionState() {
+  if (navTransitionMidTimer) {
+    clearTimeout(navTransitionMidTimer);
+    navTransitionMidTimer = 0;
+  }
+  if (navTransitionTimer) {
+    clearTimeout(navTransitionTimer);
+    navTransitionTimer = 0;
+  }
+  document.body.classList.remove('nav-jump-up', 'nav-jump-down');
+}
+
+function navigateByNavButton(targetId) {
+  const targetSection = document.getElementById(targetId);
+  if (!targetSection) return;
+  const targetIndex = SECTION_IDS.indexOf(targetId);
+  if (targetIndex < 0) return;
+  const currentIndex = getCurrentSectionIndex();
+  const direction = Math.sign(targetIndex - currentIndex);
+
+  const applyTargetState = () => {
+    if (document.body.classList.contains('detail-open')) {
+      closeDetailPage({ animate: false, pushHash: false });
+    }
+    window.scrollTo({ top: targetSection.offsetTop, behavior: 'auto' });
+    history.pushState(null, '', '#' + targetId);
+    targetModelRotationY = targetIndex * Math.PI * 1.2;
+    scheduleAlign();
+  };
+
+  if (direction === 0) {
+    clearNavTransitionState();
+    applyTargetState();
+    return;
+  }
+
+  clearNavTransitionState();
+  document.body.classList.add(direction > 0 ? 'nav-jump-up' : 'nav-jump-down');
+  navTransitionMidTimer = setTimeout(() => {
+    applyTargetState();
+    navTransitionMidTimer = 0;
+  }, NAV_TRANSITION_SWITCH_MS);
+  navTransitionTimer = setTimeout(() => {
+    document.body.classList.remove('nav-jump-up', 'nav-jump-down');
+    navTransitionTimer = 0;
+  }, NAV_TRANSITION_MS);
+}
+
+document.querySelectorAll('.nav-button[href^="#"]').forEach((navButton) => {
+  navButton.addEventListener('click', (event) => {
+    const href = navButton.getAttribute('href') || '';
+    const targetId = href.startsWith('#') ? href.slice(1) : '';
+    if (!targetId || !SECTION_IDS.includes(targetId)) return;
+    event.preventDefault();
+    navigateByNavButton(targetId);
+  });
+});
 
 document.addEventListener('click', (event) => {
   const openTrigger = event.target.closest('[data-open-detail]');
