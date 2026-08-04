@@ -648,3 +648,11 @@ main.snap-bump-down{transform:translate3d(0,2vh,0);transition:transform 160ms ea
 body.detail-entering .detail-page::before{
   opacity:0;
 }
+
+#graphic .experience-showcase.is-transitioning-out .experience-tab img,
+#graphic .experience-showcase.is-hard-hidden .experience-tab img,
+#graphic .experience-showcase.is-transitioning-out .experience-tab::after,
+#graphic .experience-showcase.is-hard-hidden .experience-tab::after{
+  opacity:0 !important;
+  transition:none !important;
+}
