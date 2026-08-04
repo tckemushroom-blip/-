@@ -570,7 +570,6 @@ function closeDetailPage(options = {}) {
       clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
-  }
   } else {
     clearDetailTransitionState();
     const applyState = () => {
