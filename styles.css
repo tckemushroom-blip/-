@@ -539,6 +539,16 @@ body.detail-returning .detail-page::before{
   opacity:0 !important;
   transition:transform 1.3s ease, opacity 1.3s ease !important;
 }
+#graphic .experience-showcase.is-transitioning-out .experience-tab:not(.is-pressed-out){
+  transform:translateX(125%);
+  opacity:0;
+  transition:transform 0.35s ease, opacity 0.35s ease;
+}
+#graphic .experience-showcase.is-hard-hidden .experience-tab{
+  transform:translateX(125%) !important;
+  opacity:0 !important;
+  transition:none !important;
+}
 html,body{scroll-behavior:smooth}
 body{scroll-snap-type:y mandatory}
 .panel{scroll-snap-align:start}

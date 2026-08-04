@@ -458,15 +458,19 @@ function clearPressedButtons() {
   document.querySelectorAll('.is-pressed-out').forEach((item) => item.classList.remove('is-pressed-out'));
 }
 
-function setButtonsHiddenForDetail(detailKey, hidden) {
-  const page = detailPageMap[detailKey];
-  if (!page) return;
-  page.classList.toggle('is-buttons-hidden', hidden);
-}
-
 function setButtonsHiddenForGraphic(hidden) {
   if (!graphicShowcase) return;
   graphicShowcase.classList.toggle('is-buttons-hidden', hidden);
+}
+
+function setGraphicShowcaseTransitioning(hidden) {
+  if (!graphicShowcase) return;
+  graphicShowcase.classList.toggle('is-transitioning-out', hidden);
+}
+
+function setGraphicShowcaseHardHidden(hidden) {
+  if (!graphicShowcase) return;
+  graphicShowcase.classList.toggle('is-hard-hidden', hidden);
 }
 
 function clearDetailTransitionState() {
@@ -479,6 +483,8 @@ function clearDetailTransitionState() {
     page.classList.remove('is-leaving-left', 'is-leaving-right', 'is-buttons-hidden');
   });
   setButtonsHiddenForGraphic(false);
+  setGraphicShowcaseTransitioning(false);
+  setGraphicShowcaseHardHidden(false);
   clearPressedButtons();
 }
 
@@ -527,17 +533,25 @@ function openDetailPage(detailKey, options = {}) {
   }
 
   clearDetailTransitionState();
-  if (options.animate && options.trigger) options.trigger.classList.add('is-pressed-out');
+  if (options.animate && options.trigger) {
+    options.trigger.classList.add('is-pressed-out');
+    if (graphicShowcase && graphicShowcase.contains(options.trigger)) {
+      setGraphicShowcaseTransitioning(true);
+    }
+  }
   if (options.animate) page.classList.add('is-buttons-hidden');
+
   const applyState = () => {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
     document.body.classList.add('detail-open');
     document.body.setAttribute('data-active-detail', detailKey);
   };
+
   if (options.animate) {
     applyState();
     detailTransitionTimer = setTimeout(() => {
       page.classList.remove('is-buttons-hidden');
+      setGraphicShowcaseTransitioning(false);
       clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
@@ -545,6 +559,7 @@ function openDetailPage(detailKey, options = {}) {
     withoutDetailTransition(applyState);
     page.classList.remove('is-buttons-hidden');
   }
+
   if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
 }
 
@@ -559,6 +574,7 @@ function closeDetailPage(options = {}) {
   if (options.animate && currentPage) {
     clearDetailTransitionState();
     currentPage.classList.add('is-buttons-hidden');
+    setGraphicShowcaseHardHidden(true);
     setButtonsHiddenForGraphic(true);
     document.body.classList.add('detail-returning');
     currentPage.classList.add('is-leaving-right');
@@ -567,6 +583,7 @@ function closeDetailPage(options = {}) {
       document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
       setButtonsHiddenForGraphic(false);
+      setGraphicShowcaseHardHidden(false);
       clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
@@ -577,9 +594,11 @@ function closeDetailPage(options = {}) {
       document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
       setButtonsHiddenForGraphic(false);
+      setGraphicShowcaseHardHidden(false);
     };
     withoutDetailTransition(applyState);
   }
+
   if (options.pushHash !== false) history.pushState(null, '', '#graphic');
 }
 
@@ -593,6 +612,8 @@ function syncDetailPageFromHash() {
       document.body.classList.remove('detail-open', 'detail-returning', 'detail-switching');
       document.body.removeAttribute('data-active-detail');
       setButtonsHiddenForGraphic(false);
+      setGraphicShowcaseTransitioning(false);
+      setGraphicShowcaseHardHidden(false);
     });
   }
 }
