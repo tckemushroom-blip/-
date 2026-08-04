@@ -558,7 +558,7 @@ function closeDetailPage(options = {}) {
 
   if (options.animate && currentPage) {
     clearDetailTransitionState();
-    if (options.trigger) options.trigger.classList.add('is-pressed-out');
+    currentPage.classList.add('is-buttons-hidden');
     setButtonsHiddenForGraphic(true);
     document.body.classList.add('detail-returning');
     currentPage.classList.add('is-leaving-right');
@@ -570,6 +570,7 @@ function closeDetailPage(options = {}) {
       clearPressedButtons();
       detailTransitionTimer = 0;
     }, DETAIL_TRANSITION_MS);
+  }
   } else {
     clearDetailTransitionState();
     const applyState = () => {

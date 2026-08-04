@@ -23,13 +23,15 @@ body{
 }
 body.detail-open{overflow:hidden}
 #site-shell{position:relative;min-height:100%;transition:transform 1.3s ease}
+#scene{position:fixed;inset:0;width:100%;height:100vh;pointer-events:none;z-index:-2;transition:transform 1.3s ease}
 body.detail-open #site-shell{transform:translateX(-100vw);pointer-events:none}
+body.detail-open #scene{transform:translateX(-100vw)}
 body.detail-returning #site-shell{transform:translateX(0);pointer-events:none}
+body.detail-returning #scene{transform:translateX(0)}
 body.detail-no-animate #site-shell,
-body.detail-no-animate .detail-page{transition:none !important}
+body.detail-no-animate .detail-page,
+body.detail-no-animate #scene{transition:none !important}
 html{scroll-padding-top:5vh}
-#scene{position:fixed;inset:0;width:100%;height:100vh;pointer-events:none;z-index:-2}
-
 .hero{
   position:fixed;
   top:0;
@@ -317,6 +319,8 @@ html{scroll-padding-top:5vh}
   background:linear-gradient(to left, rgba(163,163,163,0.92) 0%, rgba(163,163,163,0.72) 56%, rgba(163,163,163,0.18) 100%);
   backdrop-filter:blur(24px) saturate(1.12);
   -webkit-backdrop-filter:blur(24px) saturate(1.12);
+  opacity:1;
+  transition:opacity 0.15s ease;
 }
 .detail-page.is-active,
 .detail-page.is-leaving-left,
@@ -511,12 +515,14 @@ html{scroll-padding-top:5vh}
   color:#f2f2f2;
 }
 #graphic .experience-showcase.is-buttons-hidden .experience-tab{
-  transform:translateX(110%);
+  transform:translateX(110%) scaleX(0.35);
   opacity:0;
+  transition:transform 1.3s ease, opacity 1.3s ease;
 }
 .detail-page.is-buttons-hidden .detail-side-nav > *{
-  transform:translateX(110%);
+  transform:translateX(110%) scaleX(0.35);
   opacity:0;
+  transition:transform 1.3s ease, opacity 1.3s ease;
 }
 .experience-tab.is-pressed-out,
 .detail-category-button.is-pressed-out,
