@@ -545,7 +545,7 @@ function openDetailPage(detailKey, options = {}) {
       graphicHardHideTimer = setTimeout(() => {
         setGraphicShowcaseHardHidden(true);
         graphicHardHideTimer = 0;
-      }, 260);
+      }, 120);
     }
   }
   if (options.animate) page.classList.add('is-buttons-hidden');

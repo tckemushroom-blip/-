@@ -549,6 +549,11 @@ body.detail-returning .detail-page::before{
   opacity:0 !important;
   transition:none !important;
 }
+#graphic .experience-showcase.is-hard-hidden{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
 html,body{scroll-behavior:smooth}
 body{scroll-snap-type:y mandatory}
 .panel{scroll-snap-align:start}
