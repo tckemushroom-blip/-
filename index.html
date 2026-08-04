@@ -15,110 +15,192 @@
   </script>
 </head>
 <body>
-  <div id="scene" aria-hidden="true"></div>
-  <div id="frosted" aria-hidden="true"></div>
+  <div id="site-shell">
+    <div id="scene" aria-hidden="true"></div>
+    <div id="frosted" aria-hidden="true"></div>
 
-  <header class="hero">
-    <div class="hero-inner">
-      <nav class="nav-right">
-        <a class="nav-button" href="#cheng">關於我</a>
-        <a class="nav-button" href="#graduation">我的能力</a>
-        <div class="nav-item-with-menu">
-          <a class="nav-button" href="#graphic">我的經歷</a>
-          <div class="nav-submenu">
-            <a class="nav-submenu-item" href="#graphic" data-category="product">產品設計</a>
-            <a class="nav-submenu-item" href="#graphic" data-category="graphic">平面設計</a>
-            <a class="nav-submenu-item" href="#graphic" data-category="photo">攝影</a>
+    <header class="hero">
+      <div class="hero-inner">
+        <nav class="nav-right">
+          <a class="nav-button" href="#cheng">關於我</a>
+          <a class="nav-button" href="#graduation">我的能力</a>
+          <div class="nav-item-with-menu">
+            <a class="nav-button" href="#graphic">我的經歷</a>
+            <div class="nav-submenu">
+              <a class="nav-submenu-item" href="#detail-product" data-open-detail="product" data-open-mode="direct">產品設計</a>
+              <a class="nav-submenu-item" href="#detail-graphic" data-open-detail="graphic" data-open-mode="direct">平面設計</a>
+              <a class="nav-submenu-item" href="#detail-photo" data-open-detail="photo" data-open-mode="direct">攝影</a>
+            </div>
           </div>
-        </div>
-        <a class="nav-button" href="#photography">聯絡我</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section id="cheng" class="panel">
-      <div class="panel-inner">
-        <div class="panel-left"><h2 class="intro-title">程宥融｜跨領域設計師</h2></div>
-        <div class="panel-right">
-          <h3>產品設計｜視覺設計｜互動設計｜攝影</h3>
-          <div class="intro-block">
-            <p class="intro-summary">從不同角度探索設計，結合產品、視覺、科技與影像，創造具有功能與體驗的作品。</p>
-            <p class="intro-edu">國立臺北商業大學　　　　創意科技與產品設計系　　　　2026畢業</p>
-          </div>
-        </div>
+          <a class="nav-button" href="#photography">聯絡我</a>
+        </nav>
       </div>
-    </section>
+    </header>
 
-    <section id="graduation" class="panel">
-      <div class="panel-inner">
-        <div class="panel-left"><h2>我的能力</h2></div>
-        <div class="panel-right">
-          <h3>專長軟體</h3>
-          <div class="software-icons" aria-label="專長軟體圖示">
-            <img class="rhino-icon" src="https://api.iconify.design/simple-icons:rhinoceros.svg" alt="Rhino" title="Rhino" loading="lazy" />
-            <img src="https://api.iconify.design/logos:adobe-photoshop.svg" alt="Photoshop" title="Photoshop" loading="lazy" />
-            <img src="https://api.iconify.design/logos:adobe-illustrator.svg" alt="Illustrator" title="Illustrator" loading="lazy" />
-            <img src="https://api.iconify.design/logos:adobe-indesign.svg" alt="InDesign" title="InDesign" loading="lazy" />
-            <img src="https://api.iconify.design/logos:adobe-premiere.svg" alt="Premiere" title="Premiere" loading="lazy" />
-            <img src="https://api.iconify.design/logos:adobe-lightroom.svg" alt="Lightroom" title="Lightroom" loading="lazy" />
-            <img src="https://img.icons8.com/fluency/96/canva.png" alt="Canva" title="Canva" loading="lazy" />
-            <img src="https://api.iconify.design/vscode-icons:file-type-word.svg" alt="Microsoft Word" title="Microsoft Word" loading="lazy" />
-            <img src="https://api.iconify.design/vscode-icons:file-type-powerpoint.svg" alt="Microsoft PowerPoint" title="Microsoft PowerPoint" loading="lazy" />
+    <main>
+      <section id="cheng" class="panel">
+        <div class="panel-inner">
+          <div class="panel-left"><h2 class="intro-title">程宥融｜跨領域設計師</h2></div>
+          <div class="panel-right">
+            <h3>產品設計｜視覺設計｜互動設計｜攝影</h3>
+            <div class="intro-block">
+              <p class="intro-summary">從不同角度探索設計，結合產品、視覺、科技與影像，創造具有功能與體驗的作品。</p>
+              <p class="intro-edu">國立臺北商業大學　　　　創意科技與產品設計系　　　　2026畢業</p>
+            </div>
           </div>
-          <h3 class="cert-title">持有證照</h3>
-          <p class="dot-item">．iPAS 3D列印積層製造工程師－初級能力鑑定</p>
-          <p class="dot-item">．乙級印前製程技術士</p>
-          <p class="dot-item">．Visual Design using Adobe Photoshop 2020</p>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="graphic" class="panel">
-      <div class="experience-showcase" aria-label="作品分類預覽">
-        <div class="experience-tab">
-          <span class="experience-tab-label">產品設計</span>
-          <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
+      <section id="graduation" class="panel">
+        <div class="panel-inner">
+          <div class="panel-left"><h2>我的能力</h2></div>
+          <div class="panel-right">
+            <h3>專長軟體</h3>
+            <div class="software-icons" aria-label="專長軟體圖示">
+              <img class="rhino-icon" src="https://api.iconify.design/simple-icons:rhinoceros.svg" alt="Rhino" title="Rhino" loading="lazy" />
+              <img src="https://api.iconify.design/logos:adobe-photoshop.svg" alt="Photoshop" title="Photoshop" loading="lazy" />
+              <img src="https://api.iconify.design/logos:adobe-illustrator.svg" alt="Illustrator" title="Illustrator" loading="lazy" />
+              <img src="https://api.iconify.design/logos:adobe-indesign.svg" alt="InDesign" title="InDesign" loading="lazy" />
+              <img src="https://api.iconify.design/logos:adobe-premiere.svg" alt="Premiere" title="Premiere" loading="lazy" />
+              <img src="https://api.iconify.design/logos:adobe-lightroom.svg" alt="Lightroom" title="Lightroom" loading="lazy" />
+              <img src="https://img.icons8.com/fluency/96/canva.png" alt="Canva" title="Canva" loading="lazy" />
+              <img src="https://api.iconify.design/vscode-icons:file-type-word.svg" alt="Microsoft Word" title="Microsoft Word" loading="lazy" />
+              <img src="https://api.iconify.design/vscode-icons:file-type-powerpoint.svg" alt="Microsoft PowerPoint" title="Microsoft PowerPoint" loading="lazy" />
+            </div>
+            <h3 class="cert-title">持有證照</h3>
+            <p class="dot-item">．iPAS 3D列印積層製造工程師－初級能力鑑定</p>
+            <p class="dot-item">．乙級印前製程技術士</p>
+            <p class="dot-item">．Visual Design using Adobe Photoshop 2020</p>
+          </div>
         </div>
-        <div class="experience-tab">
-          <span class="experience-tab-label">平面設計</span>
+      </section>
+
+      <section id="graphic" class="panel">
+        <div class="experience-showcase" aria-label="作品分類預覽">
+          <button type="button" class="experience-tab" data-open-detail="product" data-open-mode="slide" aria-label="前往產品設計頁面">
+            <span class="experience-tab-label">產品設計</span>
+            <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
+          </button>
+          <button type="button" class="experience-tab" data-open-detail="graphic" data-open-mode="slide" aria-label="前往平面設計頁面">
+            <span class="experience-tab-label">平面設計</span>
+            <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
+          </button>
+          <button type="button" class="experience-tab" data-open-detail="photo" data-open-mode="slide" aria-label="前往攝影頁面">
+            <span class="experience-tab-label">攝影</span>
+            <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
+          </button>
+        </div>
+        <div class="panel-inner">
+          <div class="panel-left"><h2>我的經歷</h2></div>
+          <div class="panel-right exp-list">
+            <p class="exp-line top3">．2025–2026 ｜ 國家科學及技術委員會（國科會）</p>
+            <p class="top3">114年度大專學生研究計畫《奇花明草－光葉概念互動燈具設計》｜ <strong class="title-bold">計畫主持人</strong></p>
+            <p class="exp-line top3">．2025 ｜ 桃園青年設計展暨國際設計論壇</p>
+            <p class="top3">奇花明草光葉概念互動落地燈具設計 ｜ <strong class="title-bold">入圍</strong></p>
+            <p class="exp-line top3">．2024 ｜ 瑞士 LIT 國際照明設計獎 (LIT Lighting Design Awards)</p>
+            <p class="top3">互動照明產品類別 MIRAFLORA LUMICA ｜ <strong class="title-bold">獲獎 (Winner)</strong></p>
+            <p class="exp-line">．2022–2024 ｜ 國立臺北商業大學 攝影社 ｜ <strong class="title-bold">社團社長</strong></p>
+            <p class="exp-line">．2021 ｜ 第九屆台灣原住民海報雙年展 ｜ 平面設計類 ｜ <strong class="title-bold">入選</strong></p>
+            <p class="exp-line">．2021 ｜ 2021 全國預見未來青年攝影大賽 ｜ 多媒體攝影類 ｜ <strong class="title-bold">入選</strong></p>
+            <p class="exp-line">．2021 ｜ 台東縣共推住商節電競賽 ｜ 平面設計類 ｜ <strong class="title-bold">佳作</strong></p>
+            <p class="exp-line">．2021 ｜ 110年度宜花東有機農業網路行銷推廣計畫 ｜ 網頁行銷設計 ｜ <strong class="title-bold">佳作</strong></p>
+            <p class="exp-line">．2019 ｜ 第十九屆高中地理奧林匹亞 ｜ 實察繪圖組 ｜ <strong class="title-bold">潛力獎</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="photography" class="panel">
+        <div class="panel-inner">
+          <div class="panel-left"><h2>聯絡我</h2></div>
+          <div class="panel-right contact-info">
+            <p>電話：<a href="tel:+886989524638">0989-524-638</a></p>
+            <p>Gmail：<a href="mailto:tcke.mushroom@gmail.com">tcke.mushroom@gmail.com</a></p>
+            <p>IG：<a href="https://instagram.com/rung_one" target="_blank" rel="noopener">@rung_one</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="detail-pages" aria-live="polite">
+    <section class="detail-page" id="detail-product" data-detail-page="product" aria-labelledby="detail-product-title">
+      <div class="detail-side-nav">
+        <button type="button" class="detail-category-button" data-open-detail="graphic" data-open-mode="direct" aria-label="前往平面設計頁面">
+          <span class="detail-category-label">平面設計</span>
           <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
-        </div>
-        <div class="experience-tab">
-          <span class="experience-tab-label">攝影</span>
+        </button>
+        <button type="button" class="detail-back-button" data-close-detail="graphic" data-close-mode="slide" aria-label="返回我的經歷">
+          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button type="button" class="detail-category-button" data-open-detail="photo" data-open-mode="direct" aria-label="前往攝影頁面">
+          <span class="detail-category-label">攝影</span>
           <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
-        </div>
+        </button>
       </div>
-      <div class="panel-inner">
-        <div class="panel-left"><h2>我的經歷</h2></div>
-        <div class="panel-right exp-list">
-          <p class="exp-line top3">．2025–2026 ｜ 國家科學及技術委員會（國科會）</p>
-          <p class="top3">114年度大專學生研究計畫《奇花明草－光葉概念互動燈具設計》｜ <strong class="title-bold">計畫主持人</strong></p>
-          <p class="exp-line top3">．2025 ｜ 桃園青年設計展暨國際設計論壇</p>
-          <p class="top3">奇花明草光葉概念互動落地燈具設計 ｜ <strong class="title-bold">入圍</strong></p>
-          <p class="exp-line top3">．2024 ｜ 瑞士 LIT 國際照明設計獎 (LIT Lighting Design Awards)</p>
-          <p class="top3">互動照明產品類別 MIRAFLORA LUMICA ｜ <strong class="title-bold">獲獎 (Winner)</strong></p>
-          <p class="exp-line">．2022–2024 ｜ 國立臺北商業大學 攝影社 ｜ <strong class="title-bold">社團社長</strong></p>
-          <p class="exp-line">．2021 ｜ 第九屆台灣原住民海報雙年展 ｜ 平面設計類 ｜ <strong class="title-bold">入選</strong></p>
-          <p class="exp-line">．2021 ｜ 2021 全國預見未來青年攝影大賽 ｜ 多媒體攝影類 ｜ <strong class="title-bold">入選</strong></p>
-          <p class="exp-line">．2021 ｜ 台東縣共推住商節電競賽 ｜ 平面設計類 ｜ <strong class="title-bold">佳作</strong></p>
-          <p class="exp-line">．2021 ｜ 110年度宜花東有機農業網路行銷推廣計畫 ｜ 網頁行銷設計 ｜ <strong class="title-bold">佳作</strong></p>
-          <p class="exp-line">．2019 ｜ 第十九屆高中地理奧林匹亞 ｜ 實察繪圖組 ｜ <strong class="title-bold">潛力獎</strong></p>
+      <div class="detail-page-inner">
+        <div class="detail-page-copy">
+          <p class="detail-page-kicker">作品分類</p>
+          <h2 id="detail-product-title">產品設計</h2>
+          <p class="detail-page-description">互動照明、產品概念與材質表現。</p>
         </div>
+        <figure class="detail-page-media">
+          <img src="assets/experience/product-design.jpg" alt="產品設計作品主視覺">
+        </figure>
       </div>
     </section>
 
-    <section id="photography" class="panel">
-      <div class="panel-inner">
-        <div class="panel-left"><h2>聯絡我</h2></div>
-        <div class="panel-right contact-info">
-          <p>電話：<a href="tel:+886989524638">0989-524-638</a></p>
-          <p>Gmail：<a href="mailto:tcke.mushroom@gmail.com">tcke.mushroom@gmail.com</a></p>
-          <p>IG：<a href="https://instagram.com/rung_one" target="_blank" rel="noopener">@rung_one</a></p>
+    <section class="detail-page" id="detail-graphic" data-detail-page="graphic" aria-labelledby="detail-graphic-title">
+      <div class="detail-side-nav">
+        <button type="button" class="detail-category-button" data-open-detail="product" data-open-mode="direct" aria-label="前往產品設計頁面">
+          <span class="detail-category-label">產品設計</span>
+          <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
+        </button>
+        <button type="button" class="detail-back-button" data-close-detail="graphic" data-close-mode="slide" aria-label="返回我的經歷">
+          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button type="button" class="detail-category-button" data-open-detail="photo" data-open-mode="direct" aria-label="前往攝影頁面">
+          <span class="detail-category-label">攝影</span>
+          <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
+        </button>
+      </div>
+      <div class="detail-page-inner">
+        <div class="detail-page-copy">
+          <p class="detail-page-kicker">作品分類</p>
+          <h2 id="detail-graphic-title">平面設計</h2>
+          <p class="detail-page-description">平面敘事、海報視覺與版面構成。</p>
         </div>
+        <figure class="detail-page-media">
+          <img src="assets/experience/graphic-design.jpg" alt="平面設計作品主視覺">
+        </figure>
       </div>
     </section>
-  </main>
+
+    <section class="detail-page" id="detail-photo" data-detail-page="photo" aria-labelledby="detail-photo-title">
+      <div class="detail-side-nav">
+        <button type="button" class="detail-category-button" data-open-detail="product" data-open-mode="direct" aria-label="前往產品設計頁面">
+          <span class="detail-category-label">產品設計</span>
+          <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
+        </button>
+        <button type="button" class="detail-back-button" data-close-detail="graphic" data-close-mode="slide" aria-label="返回我的經歷">
+          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button type="button" class="detail-category-button" data-open-detail="graphic" data-open-mode="direct" aria-label="前往平面設計頁面">
+          <span class="detail-category-label">平面設計</span>
+          <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
+        </button>
+      </div>
+      <div class="detail-page-inner">
+        <div class="detail-page-copy">
+          <p class="detail-page-kicker">作品分類</p>
+          <h2 id="detail-photo-title">攝影</h2>
+          <p class="detail-page-description">影像觀察、構圖與光線紀錄。</p>
+        </div>
+        <figure class="detail-page-media">
+          <img src="assets/experience/photography.jpg" alt="攝影作品主視覺">
+        </figure>
+      </div>
+    </section>
+  </div>
 
   <div id="model-status" aria-hidden="true" class="model-status">3D model: initializing...</div>
   <script type="module" src="script.js"></script>

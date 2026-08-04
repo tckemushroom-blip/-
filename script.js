@@ -427,3 +427,90 @@ function scheduleAlign() { setTimeout(alignExperienceShowcase, 80); }
 document.addEventListener('DOMContentLoaded', scheduleAlign);
 window.addEventListener('resize', scheduleAlign);
 window.addEventListener('load', alignExperienceShowcase);
+function hashToDetailKey(hash) {
+  if (hash === '#detail-product') return 'product';
+  if (hash === '#detail-graphic') return 'graphic';
+  if (hash === '#detail-photo') return 'photo';
+  return '';
+}
+
+const detailPages = Array.from(document.querySelectorAll('.detail-page'));
+const detailPageMap = detailPages.reduce((map, page) => {
+  map[page.dataset.detailPage] = page;
+  return map;
+}, {});
+
+function withoutDetailTransition(callback) {
+  document.body.classList.add('detail-no-animate');
+  callback();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.body.classList.remove('detail-no-animate');
+    });
+  });
+}
+
+function openDetailPage(detailKey, options = {}) {
+  const page = detailPageMap[detailKey];
+  if (!page) return;
+  const applyState = () => {
+    detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
+    document.body.classList.add('detail-open');
+    document.body.setAttribute('data-active-detail', detailKey);
+  };
+  if (options.animate) applyState();
+  else withoutDetailTransition(applyState);
+  if (options.pushHash !== false) history.pushState(null, '', '#detail-' + detailKey);
+}
+
+function closeDetailPage(options = {}) {
+  const graphicSection = document.getElementById('graphic');
+  if (graphicSection) {
+    graphicSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+  }
+  const applyState = () => {
+    detailPages.forEach((item) => item.classList.remove('is-active'));
+    document.body.classList.remove('detail-open');
+    document.body.removeAttribute('data-active-detail');
+  };
+  if (options.animate) applyState();
+  else withoutDetailTransition(applyState);
+  if (options.pushHash !== false) history.pushState(null, '', '#graphic');
+}
+
+function syncDetailPageFromHash() {
+  const detailKey = hashToDetailKey(window.location.hash || '');
+  if (detailKey) {
+    openDetailPage(detailKey, { animate: false, pushHash: false });
+  } else if (document.body.classList.contains('detail-open')) {
+    withoutDetailTransition(() => {
+      detailPages.forEach((item) => item.classList.remove('is-active'));
+      document.body.classList.remove('detail-open');
+      document.body.removeAttribute('data-active-detail');
+    });
+  }
+}
+
+document.addEventListener('click', (event) => {
+  const openTrigger = event.target.closest('[data-open-detail]');
+  if (openTrigger) {
+    event.preventDefault();
+    openDetailPage(openTrigger.getAttribute('data-open-detail'), {
+      animate: openTrigger.getAttribute('data-open-mode') === 'slide',
+      pushHash: true
+    });
+    return;
+  }
+
+  const closeTrigger = event.target.closest('[data-close-detail]');
+  if (closeTrigger) {
+    event.preventDefault();
+    closeDetailPage({
+      animate: closeTrigger.getAttribute('data-close-mode') === 'slide',
+      pushHash: true
+    });
+  }
+});
+
+window.addEventListener('hashchange', syncDetailPageFromHash);
+syncDetailPageFromHash();
