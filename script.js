@@ -670,6 +670,12 @@ function clearNavTransitionState() {
 function navigateByNavButton(targetId) {
   const targetSection = document.getElementById(targetId);
   if (!targetSection) return;
+  if (targetId === 'graphic' && document.body.classList.contains('detail-open')) {
+    clearNavTransitionState();
+    closeDetailPage({ animate: true, pushHash: false });
+    history.pushState(null, '', '#graphic');
+    return;
+  }
   const targetIndex = SECTION_IDS.indexOf(targetId);
   if (targetIndex < 0) return;
   const currentIndex = getCurrentSectionIndex();
