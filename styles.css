@@ -26,6 +26,11 @@ body.detail-open{overflow:hidden}
 #scene{position:fixed;inset:0;width:100%;height:100vh;pointer-events:none;z-index:-2;transition:transform 1.3s ease}
 body.detail-open #site-shell{transform:translateX(-100vw);pointer-events:none}
 body.detail-open #scene{transform:translateX(-100vw)}
+body.detail-open #graphic .experience-showcase{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
 body.detail-returning #site-shell{transform:translateX(0);pointer-events:none}
 body.detail-returning #scene{transform:translateX(0)}
 body.detail-no-animate #site-shell,
