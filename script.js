@@ -411,3 +411,19 @@ document.addEventListener('visibilitychange', ()=>{ if (document.hidden) rendere
 
 // local test hint printed to console
 console.log('Starter template loaded. To test locally: python -m http.server 8000 (from repo root) then open http://localhost:8000');
+// Align experience showcase top with the "我的經歷" h2 heading top
+function alignExperienceShowcase() {
+  var section = document.getElementById('graphic');
+  if (!section) return;
+  var h2 = section.querySelector('.panel-left h2');
+  var showcase = section.querySelector('.experience-showcase');
+  if (!h2 || !showcase) return;
+  var sectionTop = section.getBoundingClientRect().top;
+  var h2Top = h2.getBoundingClientRect().top;
+  showcase.style.top = (h2Top - sectionTop) + 'px';
+  showcase.style.transform = 'none';
+}
+function scheduleAlign() { setTimeout(alignExperienceShowcase, 80); }
+document.addEventListener('DOMContentLoaded', scheduleAlign);
+window.addEventListener('resize', scheduleAlign);
+window.addEventListener('load', alignExperienceShowcase);
