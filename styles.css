@@ -101,11 +101,9 @@ html{scroll-padding-top:5vh}
   flex-direction:column;
   min-width:100%;
   gap:0;
-  background:linear-gradient(to right, rgba(163,163,163,0) 0%, rgba(163,163,163,1) 100%), rgba(234,206,197,0.68);
-  background-size:0% 100%, auto;
-  background-repeat:no-repeat;
-  backdrop-filter:blur(14px) saturate(1.08);
-  -webkit-backdrop-filter:blur(14px) saturate(1.08);
+  background:rgba(234,206,197,0.78);
+  backdrop-filter:blur(24px) saturate(1.15) contrast(1.05);
+  -webkit-backdrop-filter:blur(24px) saturate(1.15) contrast(1.05);
   box-shadow:0 8px 16px rgba(0,0,0,0.12);
   border-radius:0 0 8px 8px;
   overflow:hidden;
@@ -113,7 +111,7 @@ html{scroll-padding-top:5vh}
   visibility:hidden;
   transform:translateY(-8px);
   pointer-events:none;
-  transition:opacity 0.7s ease 0.3s, visibility 0s linear 1s, transform 0.7s ease 0.3s, background-size 0.7s ease 0.3s;
+  transition:opacity 0.7s ease 0.3s, visibility 0s linear 1s, transform 0.7s ease 0.3s;
 }
 .nav-item-with-menu:hover .nav-submenu,
 .nav-item-with-menu:focus-within .nav-submenu{
