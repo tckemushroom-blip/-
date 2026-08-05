@@ -55,7 +55,6 @@ html{scroll-padding-top:5vh}
   box-shadow:0 2px 8px rgba(0,0,0,0.06);
   z-index:2147483647;
   pointer-events:auto;
-  overflow:hidden;
 }
 .hero-inner{display:flex;align-items:stretch;justify-content:flex-end;width:100%;height:100%}
 .nav-right{display:flex;gap:0;align-items:stretch;height:100%}
@@ -89,6 +88,7 @@ html{scroll-padding-top:5vh}
   display:flex;
   align-items:stretch;
   height:100%;
+  z-index:1;
 }
 .nav-item-with-menu > .nav-button{
   position:relative;
@@ -109,7 +109,7 @@ html{scroll-padding-top:5vh}
   -webkit-backdrop-filter:blur(14px) saturate(1.08);
   box-shadow:0 8px 16px rgba(0,0,0,0.12);
   border-radius:0 0 8px 8px;
-  overflow:hidden;
+  overflow:visible;
   opacity:0;
   visibility:hidden;
   transform:translateY(-8px);
