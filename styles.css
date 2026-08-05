@@ -420,6 +420,9 @@ body.detail-returning .detail-page::before{
   min-height:100%;
 }
 .detail-product-gallery .detail-page-media img{object-fit:cover}
+#detail-product .detail-page-inner{
+  padding-top:0;
+}
 .detail-media-caption{
   position:absolute;
   left:1rem;
