@@ -89,7 +89,7 @@ html{scroll-padding-top:5vh}
   align-items:stretch;
   height:100%;
   z-index:1;
-  overflow:hidden;
+  clip-path:polygon(0 100%, 100% 100%, 100% 100vh, 0 100vh);
 }
 .nav-item-with-menu > .nav-button{
   position:relative;
