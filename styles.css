@@ -89,7 +89,6 @@ html{scroll-padding-top:5vh}
   align-items:stretch;
   height:100%;
   z-index:1;
-  clip-path:polygon(0 100%, 100% 100%, 100% 100vh, 0 100vh);
 }
 .nav-item-with-menu > .nav-button{
   position:relative;
@@ -116,6 +115,7 @@ html{scroll-padding-top:5vh}
   transform:translateY(-8px);
   pointer-events:none;
   transition:opacity 0.7s ease 0.3s, visibility 0s linear 1s, transform 0.7s ease 0.3s, background-size 0.7s ease 0.3s;
+  clip-path:polygon(0 8px, 100% 8px, 100% 100%, 0 100%);
 }
 .nav-item-with-menu:hover .nav-submenu,
 .nav-item-with-menu:focus-within .nav-submenu{
