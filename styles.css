@@ -55,6 +55,7 @@ html{scroll-padding-top:5vh}
   box-shadow:0 2px 8px rgba(0,0,0,0.06);
   z-index:2147483647;
   pointer-events:auto;
+  overflow:hidden;
 }
 .hero-inner{display:flex;align-items:stretch;justify-content:flex-end;width:100%;height:100%}
 .nav-right{display:flex;gap:0;align-items:stretch;height:100%}
@@ -707,3 +708,6 @@ body.detail-entering .detail-page::before{
   opacity:0 !important;
   transition:none !important;
 }
+
+
+
