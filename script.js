@@ -558,6 +558,31 @@ function openDetailPage(detailKey, options = {}) {
   }
   if (options.animate) page.classList.add('is-buttons-hidden');
 
+  // Update global side-nav buttons
+  const sideNavConfig = {
+    product: { top: 'graphic', bottom: 'photo' },
+    graphic: { top: 'photo', bottom: 'product' },
+    photo: { top: 'product', bottom: 'graphic' }
+  };
+  const config = sideNavConfig[detailKey];
+  if (config) {
+    const topBtn = document.getElementById('side-nav-top');
+    const bottomBtn = document.getElementById('side-nav-bottom');
+    const backBtn = document.getElementById('side-nav-back');
+    if (topBtn) {
+      topBtn.setAttribute('data-open-detail', config.top);
+      topBtn.setAttribute('data-open-mode', 'slide');
+    }
+    if (bottomBtn) {
+      bottomBtn.setAttribute('data-open-detail', config.bottom);
+      bottomBtn.setAttribute('data-open-mode', 'slide');
+    }
+    if (backBtn) {
+      backBtn.setAttribute('data-close-detail', detailKey);
+      backBtn.setAttribute('data-close-mode', 'slide');
+    }
+  }
+
   const applyState = () => {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
     document.body.classList.add('detail-open');
