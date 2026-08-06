@@ -473,6 +473,9 @@ body.detail-returning .detail-page::before{
 #detail-product.product-collapsing .detail-page-media--expandable{
   opacity:0;
 }
+#detail-product.product-collapsing .detail-page-media--expandable{
+  opacity:1;
+}
 .detail-expand-btn{
   position:absolute;
   inset:0;
@@ -504,6 +507,7 @@ body.detail-returning .detail-page::before{
   overflow:hidden;
   clip-path:inset(0 100% 0 0);
   pointer-events:none;
+  transform-origin:top left;
 }
 .product-expand-visual img{
   width:100%;
@@ -856,5 +860,3 @@ body.detail-entering .detail-page::before{
   opacity:0 !important;
   transition:none !important;
 }
-
-

@@ -764,6 +764,11 @@ syncDetailPageFromHash();
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  function getFigureRect() {
+    const figure = section ? section.querySelector('.detail-page-media--expandable') : null;
+    return figure ? figure.getBoundingClientRect() : null;
+  }
+
   function animateVisual(opening) {
     if (!visual) return Promise.resolve();
     const keyframes = opening
@@ -780,6 +785,35 @@ syncDetailPageFromHash();
       easing: 'cubic-bezier(0.16,1,0.3,1)',
       fill: 'forwards'
     });
+    return animation.finished.catch(() => {});
+  }
+
+  function animateVisualBackToCard() {
+    if (!visual) return Promise.resolve();
+    const target = getFigureRect();
+    if (!target) return Promise.resolve();
+
+    const startRect = visual.getBoundingClientRect();
+    const scaleX = target.width / startRect.width;
+    const scaleY = target.height / startRect.height;
+    const translateX = target.left - startRect.left;
+    const translateY = target.top - startRect.top;
+
+    const animation = visual.animate([
+      {
+        transform: 'translate(0px, 0px) scale(1, 1)',
+        clipPath: 'inset(0 0 0 0)'
+      },
+      {
+        transform: `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`,
+        clipPath: 'inset(0 0 0 0)'
+      }
+    ], {
+      duration: 1000,
+      easing: 'cubic-bezier(0.16,1,0.3,1)',
+      fill: 'forwards'
+    });
+
     return animation.finished.catch(() => {});
   }
 
@@ -813,6 +847,8 @@ syncDetailPageFromHash();
     }
     section.classList.remove('product-expanded');
     section.classList.add('product-collapsing');
+    await animateVisualBackToCard();
+    visual.style.transform = '';
     await animateVisual(false);
     if (visual) visual.setAttribute('aria-hidden', 'true');
     await wait(280);
