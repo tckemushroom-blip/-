@@ -440,10 +440,13 @@ body.detail-returning .detail-page::before{
 .detail-product-gallery .detail-page-media img{object-fit:cover}
 #detail-product .detail-page-inner{
   padding-top:0;
+}
+#detail-product.product-expanded .detail-page-copy{
+  transform:translateX(-120vw);
   transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
 }
-#detail-product.product-expanded .detail-page-inner{
-  transform:translateX(-110vw);
+#detail-product .detail-page-copy{
+  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
 }
 
 /* 可點擊圖片按鈕 */

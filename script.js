@@ -750,19 +750,26 @@ syncDetailPageFromHash();
   const btn = document.getElementById('qihuamingcao-btn');
   const panel = document.getElementById('qihuamingcao-panel');
   const closeBtn = document.getElementById('qihuamingcao-close');
+  const backBtn = document.getElementById('qihuamingcao-back');
   const section = document.getElementById('detail-product');
+  const regularBtns = section ? section.querySelectorAll('.detail-side-nav .detail-category-button:not(.detail-expand-back), .detail-side-nav .detail-back-button') : [];
 
   function openPanel(){
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden','false');
     section.classList.add('product-expanded');
+    if(backBtn) backBtn.style.display = '';
+    regularBtns.forEach(b => b.style.display = 'none');
   }
   function closePanel(){
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden','true');
     section.classList.remove('product-expanded');
+    if(backBtn) backBtn.style.display = 'none';
+    regularBtns.forEach(b => b.style.display = '');
   }
 
   if(btn) btn.addEventListener('click', openPanel);
   if(closeBtn) closeBtn.addEventListener('click', closePanel);
+  if(backBtn) backBtn.addEventListener('click', closePanel);
 })();
