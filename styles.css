@@ -596,7 +596,7 @@ body.detail-returning .detail-page::before{
   letter-spacing:0.08em;
 }
 .detail-side-nav{
-  position:fixed;
+  position:fixed !important;
   right:0;
   top:50%;
   transform:translateY(-50%);
@@ -604,7 +604,7 @@ body.detail-returning .detail-page::before{
   flex-direction:column;
   align-items:flex-end;
   gap:14px;
-  z-index:2;
+  z-index:6005;
 }
 .detail-category-button,
 .detail-back-button{
