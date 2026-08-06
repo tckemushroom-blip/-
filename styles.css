@@ -442,25 +442,37 @@ body.detail-returning .detail-page::before{
   padding-top:0;
 }
 
-/* 展開時：左側文字欄淡出，圖片展開 */
+/* 展開時：左側文字欄淡出 */
 #detail-product .detail-page-copy{
-  transition:opacity 0.4s ease, transform 0.7s cubic-bezier(0.77,0,0.18,1);
+  transition:opacity 0.35s ease;
 }
 #detail-product.product-expanded .detail-page-copy{
   opacity:0;
   pointer-events:none;
 }
 
-/* 左邊圖片展開至右側 */
-#detail-product .detail-product-gallery{
-  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
+/* 展開時：右側另一張圖片隱藏 */
+#detail-product .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable){
+  transition:opacity 0.35s ease;
 }
-#detail-product.product-expanded .detail-product-gallery{
-  transform:translateX(calc(50vw - 16vw));
+#detail-product.product-expanded .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable){
+  opacity:0;
 }
 
-/* 可點擊圖片按鈕 */
-.detail-page-media--expandable{cursor:pointer}
+/* 可點擊圖片 — 展開後移到右側並放大 */
+.detail-page-media--expandable{
+  cursor:pointer;
+  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1), width 0.7s cubic-bezier(0.77,0,0.18,1);
+  position:relative;
+}
+#detail-product.product-expanded .detail-page-media--expandable{
+  position:fixed;
+  top:0;
+  right:0;
+  width:58vw;
+  height:100vh;
+  z-index:9;
+}
 .detail-expand-btn{
   position:absolute;
   inset:0;
@@ -479,7 +491,7 @@ body.detail-returning .detail-page::before{
   display:block;
 }
 
-/* 奇花明草文字面板：固定在左側，從圖片後方滑出 */
+/* 文字面板：從左側滑入，蓋在原本圖片位置 */
 .product-expand-panel{
   position:fixed;
   top:5vh;
@@ -489,8 +501,7 @@ body.detail-returning .detail-page::before{
   z-index:8;
   pointer-events:none;
   transform:translateX(-100%);
-  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
-  transition-delay:0.15s;
+  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1) 0.15s;
   display:flex;
   align-items:stretch;
 }
@@ -502,7 +513,7 @@ body.detail-returning .detail-page::before{
   position:relative;
   width:100%;
   height:100%;
-  background:rgba(234,206,197,0.72);
+  background:rgba(234,206,197,0.82);
   backdrop-filter:blur(28px) saturate(1.2);
   -webkit-backdrop-filter:blur(28px) saturate(1.2);
   padding:8vh 3.5vw 6vh 4vw;
