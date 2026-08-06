@@ -771,14 +771,15 @@ syncDetailPageFromHash();
 
   function animateVisual(opening) {
     if (!visual) return Promise.resolve();
+    visual.style.transform = opening ? 'translateX(56px)' : 'translateX(0px)';
     const keyframes = opening
       ? [
-          { clipPath: 'inset(0 100% 0 0)' },
-          { clipPath: 'inset(0 0 0 0)' }
+          { clipPath: 'inset(0 100% 0 0)', transform: 'translateX(56px)' },
+          { clipPath: 'inset(0 0 0 0)', transform: 'translateX(0px)' }
         ]
       : [
-          { clipPath: 'inset(0 0 0 0)' },
-          { clipPath: 'inset(0 100% 0 0)' }
+          { clipPath: 'inset(0 0 0 0)', transform: 'translateX(0px)' },
+          { clipPath: 'inset(0 100% 0 0)', transform: 'translateX(56px)' }
         ];
     const animation = visual.animate(keyframes, {
       duration: 1000,
@@ -806,7 +807,7 @@ syncDetailPageFromHash();
       },
       {
         transform: `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`,
-        clipPath: 'inset(0 0 0 0)'
+        clipPath: 'inset(0 22% 0 0)'
       }
     ], {
       duration: 1000,
@@ -839,6 +840,7 @@ syncDetailPageFromHash();
     if (immediate) {
       section.classList.remove('product-expanded', 'product-collapsing');
       if (visual) {
+        visual.style.transform = 'translateX(56px)';
         visual.style.clipPath = 'inset(0 100% 0 0)';
         visual.setAttribute('aria-hidden', 'true');
       }
@@ -848,7 +850,7 @@ syncDetailPageFromHash();
     section.classList.remove('product-expanded');
     section.classList.add('product-collapsing');
     await animateVisualBackToCard();
-    visual.style.transform = '';
+    visual.style.transform = 'translateX(56px)';
     await animateVisual(false);
     if (visual) visual.setAttribute('aria-hidden', 'true');
     await wait(280);

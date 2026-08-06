@@ -508,6 +508,7 @@ body.detail-returning .detail-page::before{
   clip-path:inset(0 100% 0 0);
   pointer-events:none;
   transform-origin:top left;
+  will-change:transform,clip-path,opacity;
 }
 .product-expand-visual img{
   width:100%;
@@ -595,7 +596,7 @@ body.detail-returning .detail-page::before{
   letter-spacing:0.08em;
 }
 .detail-side-nav{
-  position:absolute;
+  position:fixed;
   right:0;
   top:50%;
   transform:translateY(-50%);
