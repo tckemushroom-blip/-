@@ -744,3 +744,25 @@ document.addEventListener('click', (event) => {
 
 window.addEventListener('hashchange', syncDetailPageFromHash);
 syncDetailPageFromHash();
+
+// 奇花明草展開面板
+(function(){
+  const btn = document.getElementById('qihuamingcao-btn');
+  const panel = document.getElementById('qihuamingcao-panel');
+  const closeBtn = document.getElementById('qihuamingcao-close');
+  const section = document.getElementById('detail-product');
+
+  function openPanel(){
+    panel.classList.add('is-open');
+    panel.setAttribute('aria-hidden','false');
+    section.classList.add('product-expanded');
+  }
+  function closePanel(){
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden','true');
+    section.classList.remove('product-expanded');
+  }
+
+  if(btn) btn.addEventListener('click', openPanel);
+  if(closeBtn) closeBtn.addEventListener('click', closePanel);
+})();
