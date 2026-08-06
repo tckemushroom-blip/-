@@ -600,11 +600,14 @@ body.detail-returning .detail-page::before{
   right:0;
   top:50%;
   transform:translateY(-50%);
-  display:flex;
+  display:none;
   flex-direction:column;
   align-items:flex-end;
   gap:14px;
   z-index:6005;
+}
+body.detail-open .detail-side-nav{
+  display:flex;
 }
 .detail-category-button,
 .detail-back-button{

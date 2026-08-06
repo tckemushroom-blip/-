@@ -123,19 +123,6 @@
 
   <div id="detail-pages" aria-live="polite">
     <section class="detail-page" id="detail-product" data-detail-page="product" aria-labelledby="detail-product-title">
-      <div class="detail-side-nav">
-        <button type="button" class="detail-category-button" data-open-detail="graphic" data-open-mode="slide" aria-label="前往平面設計頁面">
-          <span class="detail-category-label">平面設計</span>
-          <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
-        </button>
-        <button type="button" class="detail-back-button" id="product-back-btn" data-close-detail="product" data-close-mode="slide" aria-label="返回我的經歷">
-          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-        <button type="button" class="detail-category-button" data-open-detail="photo" data-open-mode="slide" aria-label="前往攝影頁面">
-          <span class="detail-category-label">攝影</span>
-          <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
-        </button>
-      </div>
       <div class="detail-page-inner">
         <div class="detail-page-copy">
           <p class="detail-page-kicker">作品分類</p>
@@ -169,19 +156,6 @@
     </section>
 
     <section class="detail-page" id="detail-graphic" data-detail-page="graphic" aria-labelledby="detail-graphic-title">
-      <div class="detail-side-nav">
-        <button type="button" class="detail-category-button" data-open-detail="product" data-open-mode="slide" aria-label="前往產品設計頁面">
-          <span class="detail-category-label">產品設計</span>
-          <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
-        </button>
-        <button type="button" class="detail-back-button" data-close-detail="graphic" data-close-mode="slide" aria-label="返回我的經歷">
-          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-        <button type="button" class="detail-category-button" data-open-detail="photo" data-open-mode="slide" aria-label="前往攝影頁面">
-          <span class="detail-category-label">攝影</span>
-          <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
-        </button>
-      </div>
       <div class="detail-page-inner">
         <div class="detail-page-copy">
           <p class="detail-page-kicker">作品分類</p>
@@ -195,19 +169,6 @@
     </section>
 
     <section class="detail-page" id="detail-photo" data-detail-page="photo" aria-labelledby="detail-photo-title">
-      <div class="detail-side-nav">
-        <button type="button" class="detail-category-button" data-open-detail="product" data-open-mode="slide" aria-label="前往產品設計頁面">
-          <span class="detail-category-label">產品設計</span>
-          <img src="assets/experience/product-design.jpg" alt="產品設計作品預覽">
-        </button>
-        <button type="button" class="detail-back-button" data-close-detail="graphic" data-close-mode="slide" aria-label="返回我的經歷">
-          <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
-        <button type="button" class="detail-category-button" data-open-detail="graphic" data-open-mode="slide" aria-label="前往平面設計頁面">
-          <span class="detail-category-label">平面設計</span>
-          <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
-        </button>
-      </div>
       <div class="detail-page-inner">
         <div class="detail-page-copy">
           <p class="detail-page-kicker">作品分類</p>
@@ -219,6 +180,20 @@
         </figure>
       </div>
     </section>
+  </div>
+
+  <div class="detail-side-nav">
+    <button type="button" class="detail-category-button" id="detail-nav-top" data-open-detail="graphic" data-open-mode="slide" aria-label="前往平面設計頁面">
+      <span class="detail-category-label">平面設計</span>
+      <img src="assets/experience/graphic-design.jpg" alt="平面設計作品預覽">
+    </button>
+    <button type="button" class="detail-back-button" id="detail-nav-back" data-close-mode="slide" aria-label="返回我的經歷">
+      <span class="detail-back-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 5 7.5 12l7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </button>
+    <button type="button" class="detail-category-button" id="detail-nav-bottom" data-open-detail="photo" data-open-mode="slide" aria-label="前往攝影頁面">
+      <span class="detail-category-label">攝影</span>
+      <img src="assets/experience/photography.jpg" alt="攝影作品預覽">
+    </button>
   </div>
 
   <div id="model-status" aria-hidden="true" class="model-status">3D model: initializing...</div>
