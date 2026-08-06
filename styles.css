@@ -459,14 +459,10 @@ body.detail-returning .detail-page::before{
   opacity:0;
 }
 
-/* 可點擊圖片 — 展開後移到右側並放大 */
+/* 可點擊圖片 — 展開後固定至右側 */
 .detail-page-media--expandable{
   cursor:pointer;
   position:relative;
-}
-.detail-page-media--expandable .detail-expand-btn img{
-  transition:transform 1s cubic-bezier(0.16,1,0.3,1);
-  transform-origin:center center;
 }
 #detail-product.product-expanded .detail-page-media--expandable{
   position:fixed;
@@ -475,10 +471,6 @@ body.detail-returning .detail-page::before{
   width:58vw;
   height:100vh;
   z-index:9;
-  transition:top 1s cubic-bezier(0.16,1,0.3,1),
-             right 1s cubic-bezier(0.16,1,0.3,1),
-             width 1s cubic-bezier(0.16,1,0.3,1),
-             height 1s cubic-bezier(0.16,1,0.3,1);
 }
 .detail-expand-btn{
   position:absolute;
@@ -498,7 +490,7 @@ body.detail-returning .detail-page::before{
   display:block;
 }
 
-/* 文字面板：從左側滑入，蓋在原本圖片位置 */
+/* 文字面板：預設完全隱藏，點擊後原地淡入浮現 */
 .product-expand-panel{
   position:fixed;
   top:5vh;
@@ -507,22 +499,25 @@ body.detail-returning .detail-page::before{
   height:95vh;
   z-index:8;
   pointer-events:none;
-  transform:translateX(-100%);
-  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1) 0.15s;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.5s ease 0.6s, visibility 0s linear 1.1s;
   display:flex;
   align-items:stretch;
 }
 .product-expand-panel.is-open{
   pointer-events:auto;
-  transform:translateX(0);
+  opacity:1;
+  visibility:visible;
+  transition:opacity 0.5s ease 0.6s, visibility 0s linear 0.6s;
 }
 .product-expand-content{
   position:relative;
   width:100%;
   height:100%;
-  background:rgba(234,206,197,0.82);
-  backdrop-filter:blur(28px) saturate(1.2);
-  -webkit-backdrop-filter:blur(28px) saturate(1.2);
+  background:none;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
   padding:8vh 3.5vw 6vh 4vw;
   overflow-y:auto;
   display:flex;

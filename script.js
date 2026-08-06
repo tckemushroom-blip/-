@@ -760,9 +760,27 @@ syncDetailPageFromHash();
 
   function openPanel(){
     expanded = true;
+
+    // 記錄圖片目前的位置，做 1 秒 FLIP 展開動畫
+    const figure = section.querySelector('.detail-page-media--expandable');
+    const from = figure ? figure.getBoundingClientRect() : null;
+
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden','false');
     section.classList.add('product-expanded');
+
+    // FLIP：從舊位置動畫到新的 fixed 位置
+    if(figure && from){
+      const to = figure.getBoundingClientRect();
+      const dx = from.left - to.left;
+      const dy = from.top - to.top;
+      const scaleX = from.width / to.width;
+      const scaleY = from.height / to.height;
+      figure.animate([
+        { transform: `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`, transformOrigin: '0 0' },
+        { transform: 'translate(0,0) scale(1,1)', transformOrigin: '0 0' }
+      ], { duration: 1000, easing: 'cubic-bezier(0.16,1,0.3,1)', fill: 'none' });
+    }
   }
   function closePanel(){
     expanded = false;
