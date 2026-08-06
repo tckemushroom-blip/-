@@ -510,9 +510,56 @@ function finishDetailSwitch(nextPage, currentPage) {
   detailTransitionTimer = 0;
 }
 
+function updateSideNavButtons(detailKey) {
+  const sideNavConfig = {
+    product: { 
+      top: { key: 'graphic', label: '平面設計', img: 'assets/experience/graphic-design.jpg' }, 
+      bottom: { key: 'photo', label: '攝影', img: 'assets/experience/photography.jpg' } 
+    },
+    graphic: { 
+      top: { key: 'photo', label: '攝影', img: 'assets/experience/photography.jpg' }, 
+      bottom: { key: 'product', label: '產品設計', img: 'assets/experience/product-design.jpg' } 
+    },
+    photo: { 
+      top: { key: 'product', label: '產品設計', img: 'assets/experience/product-design.jpg' }, 
+      bottom: { key: 'graphic', label: '平面設計', img: 'assets/experience/graphic-design.jpg' } 
+    }
+  };
+  const config = sideNavConfig[detailKey];
+  if (config) {
+    const topBtn = document.getElementById('side-nav-top');
+    const bottomBtn = document.getElementById('side-nav-bottom');
+    const backBtn = document.getElementById('side-nav-back');
+    if (topBtn) {
+      topBtn.setAttribute('data-open-detail', config.top.key);
+      topBtn.setAttribute('data-open-mode', 'slide');
+      const label = topBtn.querySelector('.detail-category-label');
+      if (label) label.textContent = config.top.label;
+      const img = topBtn.querySelector('img');
+      if (img) img.src = config.top.img;
+    }
+    if (bottomBtn) {
+      bottomBtn.setAttribute('data-open-detail', config.bottom.key);
+      bottomBtn.setAttribute('data-open-mode', 'slide');
+      const label = bottomBtn.querySelector('.detail-category-label');
+      if (label) label.textContent = config.bottom.label;
+      const img = bottomBtn.querySelector('img');
+      if (img) img.src = config.bottom.img;
+    }
+    if (backBtn) {
+      backBtn.setAttribute('data-close-detail', detailKey);
+      backBtn.setAttribute('data-close-mode', 'slide');
+    }
+  }
+}
+
 function switchDetailPage(nextKey, trigger) {
   // 自動關閉奇花明草面板
   if(typeof window.__closeQihuaPanel === 'function') window.__closeQihuaPanel();
+  
+  // 更新側邊導航按鈕
+  updateSideNavButtons(nextKey);
+  
   const currentKey = document.body.getAttribute('data-active-detail');
   const currentPage = currentKey ? detailPageMap[currentKey] : null;
   const nextPage = detailPageMap[nextKey];
@@ -559,46 +606,7 @@ function openDetailPage(detailKey, options = {}) {
   if (options.animate) page.classList.add('is-buttons-hidden');
 
   // Update global side-nav buttons
-  const sideNavConfig = {
-    product: { 
-      top: { key: 'graphic', label: '平面設計', img: 'assets/experience/graphic-design.jpg' }, 
-      bottom: { key: 'photo', label: '攝影', img: 'assets/experience/photography.jpg' } 
-    },
-    graphic: { 
-      top: { key: 'photo', label: '攝影', img: 'assets/experience/photography.jpg' }, 
-      bottom: { key: 'product', label: '產品設計', img: 'assets/experience/product-design.jpg' } 
-    },
-    photo: { 
-      top: { key: 'product', label: '產品設計', img: 'assets/experience/product-design.jpg' }, 
-      bottom: { key: 'graphic', label: '平面設計', img: 'assets/experience/graphic-design.jpg' } 
-    }
-  };
-  const config = sideNavConfig[detailKey];
-  if (config) {
-    const topBtn = document.getElementById('side-nav-top');
-    const bottomBtn = document.getElementById('side-nav-bottom');
-    const backBtn = document.getElementById('side-nav-back');
-    if (topBtn) {
-      topBtn.setAttribute('data-open-detail', config.top.key);
-      topBtn.setAttribute('data-open-mode', 'slide');
-      const label = topBtn.querySelector('.detail-category-label');
-      if (label) label.textContent = config.top.label;
-      const img = topBtn.querySelector('img');
-      if (img) img.src = config.top.img;
-    }
-    if (bottomBtn) {
-      bottomBtn.setAttribute('data-open-detail', config.bottom.key);
-      bottomBtn.setAttribute('data-open-mode', 'slide');
-      const label = bottomBtn.querySelector('.detail-category-label');
-      if (label) label.textContent = config.bottom.label;
-      const img = bottomBtn.querySelector('img');
-      if (img) img.src = config.bottom.img;
-    }
-    if (backBtn) {
-      backBtn.setAttribute('data-close-detail', detailKey);
-      backBtn.setAttribute('data-close-mode', 'slide');
-    }
-  }
+  updateSideNavButtons(detailKey);
 
   const applyState = () => {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
