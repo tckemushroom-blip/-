@@ -441,12 +441,22 @@ body.detail-returning .detail-page::before{
 #detail-product .detail-page-inner{
   padding-top:0;
 }
+
+/* 展開時：左側文字欄淡出，圖片展開 */
+#detail-product .detail-page-copy{
+  transition:opacity 0.4s ease, transform 0.7s cubic-bezier(0.77,0,0.18,1);
+}
 #detail-product.product-expanded .detail-page-copy{
-  transform:translateX(-120vw);
+  opacity:0;
+  pointer-events:none;
+}
+
+/* 左邊圖片展開至右側 */
+#detail-product .detail-product-gallery{
   transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
 }
-#detail-product .detail-page-copy{
-  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
+#detail-product.product-expanded .detail-product-gallery{
+  transform:translateX(calc(50vw - 16vw));
 }
 
 /* 可點擊圖片按鈕 */
@@ -469,17 +479,18 @@ body.detail-returning .detail-page::before{
   display:block;
 }
 
-/* 奇花明草展開面板：蓋在圖片上，從圖片後方滑出 */
+/* 奇花明草文字面板：固定在左側，從圖片後方滑出 */
 .product-expand-panel{
   position:fixed;
-  top:0;
-  right:0;
-  width:50vw;
-  height:100vh;
-  z-index:10;
+  top:5vh;
+  left:0;
+  width:42vw;
+  height:95vh;
+  z-index:8;
   pointer-events:none;
-  transform:translateX(100%);
+  transform:translateX(-100%);
   transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);
+  transition-delay:0.15s;
   display:flex;
   align-items:stretch;
 }
@@ -494,30 +505,12 @@ body.detail-returning .detail-page::before{
   background:rgba(234,206,197,0.72);
   backdrop-filter:blur(28px) saturate(1.2);
   -webkit-backdrop-filter:blur(28px) saturate(1.2);
-  padding:8vh 4vw 6vh 3.5vw;
+  padding:8vh 3.5vw 6vh 4vw;
   overflow-y:auto;
   display:flex;
   flex-direction:column;
   gap:1.4rem;
 }
-.product-expand-close{
-  position:absolute;
-  top:1.2rem;
-  right:1.2rem;
-  width:2.4rem;
-  height:2.4rem;
-  border:none;
-  background:rgba(30,20,18,0.18);
-  border-radius:50%;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#3a2e2b;
-  transition:background 0.2s;
-}
-.product-expand-close:hover{background:rgba(30,20,18,0.32)}
-.product-expand-close svg{width:1.1rem;height:1.1rem}
 .product-expand-title{
   margin:0;
   font-family:var(--font-heavy);

@@ -749,27 +749,33 @@ syncDetailPageFromHash();
 (function(){
   const btn = document.getElementById('qihuamingcao-btn');
   const panel = document.getElementById('qihuamingcao-panel');
-  const closeBtn = document.getElementById('qihuamingcao-close');
-  const backBtn = document.getElementById('qihuamingcao-back');
+  const backBtn = document.getElementById('product-back-btn');
   const section = document.getElementById('detail-product');
-  const regularBtns = section ? section.querySelectorAll('.detail-side-nav .detail-category-button:not(.detail-expand-back), .detail-side-nav .detail-back-button') : [];
+  let expanded = false;
 
   function openPanel(){
+    expanded = true;
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden','false');
     section.classList.add('product-expanded');
-    if(backBtn) backBtn.style.display = '';
-    regularBtns.forEach(b => b.style.display = 'none');
   }
   function closePanel(){
+    expanded = false;
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden','true');
     section.classList.remove('product-expanded');
-    if(backBtn) backBtn.style.display = 'none';
-    regularBtns.forEach(b => b.style.display = '');
   }
 
   if(btn) btn.addEventListener('click', openPanel);
-  if(closeBtn) closeBtn.addEventListener('click', closePanel);
-  if(backBtn) backBtn.addEventListener('click', closePanel);
+
+  // 中間返回按鈕：展開時關閉面板，否則正常觸發 data-close-detail
+  if(backBtn){
+    backBtn.addEventListener('click', (e) => {
+      if(expanded){
+        e.stopPropagation();
+        closePanel();
+      }
+      // 若未展開，讓事件冒泡到全域的 data-close-detail 處理器
+    });
+  }
 })();
