@@ -450,27 +450,28 @@ body.detail-returning .detail-page::before{
   opacity:0;
   pointer-events:none;
 }
+#detail-product.product-collapsing .detail-page-copy{
+  opacity:0;
+  pointer-events:none;
+}
 
 /* 展開時：右側另一張圖片隱藏 */
 #detail-product .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable){
   transition:opacity 0.35s ease;
 }
-#detail-product.product-expanded .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable){
+#detail-product.product-expanded .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable),
+#detail-product.product-collapsing .detail-product-gallery .detail-page-media:not(.detail-page-media--expandable){
   opacity:0;
 }
 
-/* 可點擊圖片 — 展開後固定至右側 */
+/* 可點擊圖片 */
 .detail-page-media--expandable{
   cursor:pointer;
   position:relative;
 }
-#detail-product.product-expanded .detail-page-media--expandable{
-  position:fixed;
-  top:0;
-  right:0;
-  width:58vw;
-  height:100vh;
-  z-index:9;
+#detail-product.product-expanded .detail-page-media--expandable,
+#detail-product.product-collapsing .detail-page-media--expandable{
+  opacity:0;
 }
 .detail-expand-btn{
   position:absolute;
@@ -490,6 +491,32 @@ body.detail-returning .detail-page::before{
   display:block;
 }
 
+/* 展開圖片遮色片層 */
+.product-expand-visual{
+  position:fixed;
+  top:0;
+  right:0;
+  width:58vw;
+  height:100vh;
+  z-index:9;
+  opacity:0;
+  visibility:hidden;
+  overflow:hidden;
+  clip-path:inset(0 100% 0 0);
+  pointer-events:none;
+}
+.product-expand-visual img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+#detail-product.product-expanded .product-expand-visual,
+#detail-product.product-collapsing .product-expand-visual{
+  opacity:1;
+  visibility:visible;
+}
+
 /* 文字面板：預設完全隱藏，點擊後原地淡入浮現 */
 .product-expand-panel{
   position:fixed;
@@ -501,7 +528,7 @@ body.detail-returning .detail-page::before{
   pointer-events:none;
   opacity:0;
   visibility:hidden;
-  transition:opacity 0.5s ease 0.6s, visibility 0s linear 1.1s;
+  transition:opacity 0.28s ease, visibility 0s linear 0.28s;
   display:flex;
   align-items:stretch;
 }
@@ -509,7 +536,7 @@ body.detail-returning .detail-page::before{
   pointer-events:auto;
   opacity:1;
   visibility:visible;
-  transition:opacity 0.5s ease 0.6s, visibility 0s linear 0.6s;
+  transition:opacity 0.28s ease, visibility 0s linear 0s;
 }
 .product-expand-content{
   position:relative;
@@ -829,6 +856,5 @@ body.detail-entering .detail-page::before{
   opacity:0 !important;
   transition:none !important;
 }
-
 
 

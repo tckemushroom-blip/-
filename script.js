@@ -756,37 +756,68 @@ syncDetailPageFromHash();
   const panel = document.getElementById('qihuamingcao-panel');
   const backBtn = document.getElementById('product-back-btn');
   const section = document.getElementById('detail-product');
+  const visual = document.getElementById('qihuamingcao-visual');
   let expanded = false;
+  let animating = false;
 
-  function openPanel(){
+  function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function animateVisual(opening) {
+    if (!visual) return Promise.resolve();
+    const keyframes = opening
+      ? [
+          { clipPath: 'inset(0 100% 0 0)' },
+          { clipPath: 'inset(0 0 0 0)' }
+        ]
+      : [
+          { clipPath: 'inset(0 0 0 0)' },
+          { clipPath: 'inset(0 100% 0 0)' }
+        ];
+    const animation = visual.animate(keyframes, {
+      duration: 1000,
+      easing: 'cubic-bezier(0.16,1,0.3,1)',
+      fill: 'forwards'
+    });
+    return animation.finished.catch(() => {});
+  }
+
+  async function openPanel(){
+    if (expanded || animating) return;
+    animating = true;
     expanded = true;
-
-    // 記錄圖片目前的位置，做 1 秒 FLIP 展開動畫
-    const figure = section.querySelector('.detail-page-media--expandable');
-    const from = figure ? figure.getBoundingClientRect() : null;
-
+    section.classList.add('product-expanded');
+    if (visual) visual.setAttribute('aria-hidden', 'false');
+    await animateVisual(true);
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden','false');
-    section.classList.add('product-expanded');
-
-    // FLIP：從舊位置動畫到新的 fixed 位置
-    if(figure && from){
-      const to = figure.getBoundingClientRect();
-      const dx = from.left - to.left;
-      const dy = from.top - to.top;
-      const scaleX = from.width / to.width;
-      const scaleY = from.height / to.height;
-      figure.animate([
-        { transform: `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`, transformOrigin: '0 0' },
-        { transform: 'translate(0,0) scale(1,1)', transformOrigin: '0 0' }
-      ], { duration: 1000, easing: 'cubic-bezier(0.16,1,0.3,1)', fill: 'none' });
-    }
+    animating = false;
   }
-  function closePanel(){
+
+  async function closePanel(immediate = false){
+    if ((!expanded && !section.classList.contains('product-collapsing')) || animating) return;
+    animating = true;
     expanded = false;
     panel.classList.remove('is-open');
+    panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden','true');
+    if (immediate) {
+      section.classList.remove('product-expanded', 'product-collapsing');
+      if (visual) {
+        visual.style.clipPath = 'inset(0 100% 0 0)';
+        visual.setAttribute('aria-hidden', 'true');
+      }
+      animating = false;
+      return;
+    }
     section.classList.remove('product-expanded');
+    section.classList.add('product-collapsing');
+    await animateVisual(false);
+    if (visual) visual.setAttribute('aria-hidden', 'true');
+    await wait(280);
+    section.classList.remove('product-collapsing');
+    animating = false;
   }
 
   // 暴露給外部呼叫（離開頁面時自動關閉）
@@ -799,6 +830,7 @@ syncDetailPageFromHash();
     backBtn.addEventListener('click', (e) => {
       if(expanded){
         e.stopPropagation();
+        e.preventDefault();
         closePanel();
       }
       // 若未展開，讓事件冒泡到全域的 data-close-detail 處理器
