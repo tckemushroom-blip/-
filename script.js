@@ -560,9 +560,9 @@ function openDetailPage(detailKey, options = {}) {
 
   // Update global side-nav buttons
   const sideNavConfig = {
-    product: { top: 'graphic', bottom: 'photo' },
-    graphic: { top: 'photo', bottom: 'product' },
-    photo: { top: 'product', bottom: 'graphic' }
+    product: { top: { key: 'graphic', label: '平面設計' }, bottom: { key: 'photo', label: '攝影' } },
+    graphic: { top: { key: 'photo', label: '攝影' }, bottom: { key: 'product', label: '產品設計' } },
+    photo: { top: { key: 'product', label: '產品設計' }, bottom: { key: 'graphic', label: '平面設計' } }
   };
   const config = sideNavConfig[detailKey];
   if (config) {
@@ -570,12 +570,16 @@ function openDetailPage(detailKey, options = {}) {
     const bottomBtn = document.getElementById('side-nav-bottom');
     const backBtn = document.getElementById('side-nav-back');
     if (topBtn) {
-      topBtn.setAttribute('data-open-detail', config.top);
+      topBtn.setAttribute('data-open-detail', config.top.key);
       topBtn.setAttribute('data-open-mode', 'slide');
+      const label = topBtn.querySelector('.detail-category-label');
+      if (label) label.textContent = config.top.label;
     }
     if (bottomBtn) {
-      bottomBtn.setAttribute('data-open-detail', config.bottom);
+      bottomBtn.setAttribute('data-open-detail', config.bottom.key);
       bottomBtn.setAttribute('data-open-mode', 'slide');
+      const label = bottomBtn.querySelector('.detail-category-label');
+      if (label) label.textContent = config.bottom.label;
     }
     if (backBtn) {
       backBtn.setAttribute('data-close-detail', detailKey);
@@ -764,11 +768,16 @@ document.addEventListener('click', (event) => {
   const closeTrigger = event.target.closest('[data-close-detail]');
   if (closeTrigger) {
     event.preventDefault();
-    closeDetailPage({
-      animate: closeTrigger.getAttribute('data-close-mode') === 'slide',
-      pushHash: true,
-      trigger: closeTrigger
-    });
+    // Check if there's an open qihuamingcao panel first
+    if (window.__closeQihuaPanel) {
+      window.__closeQihuaPanel();
+    } else {
+      closeDetailPage({
+        animate: closeTrigger.getAttribute('data-close-mode') === 'slide',
+        pushHash: true,
+        trigger: closeTrigger
+      });
+    }
   }
 });
 
