@@ -511,6 +511,8 @@ function finishDetailSwitch(nextPage, currentPage) {
 }
 
 function switchDetailPage(nextKey, trigger) {
+  // 自動關閉奇花明草面板
+  if(typeof window.__closeQihuaPanel === 'function') window.__closeQihuaPanel();
   const currentKey = document.body.getAttribute('data-active-detail');
   const currentPage = currentKey ? detailPageMap[currentKey] : null;
   const nextPage = detailPageMap[nextKey];
@@ -584,6 +586,9 @@ function openDetailPage(detailKey, options = {}) {
 }
 
 function closeDetailPage(options = {}) {
+  // 自動關閉奇花明草面板
+  if(typeof window.__closeQihuaPanel === 'function') window.__closeQihuaPanel();
+
   const graphicSection = document.getElementById('graphic');
   if (graphicSection) {
     graphicSection.scrollIntoView({ behavior: 'auto', block: 'start' });
@@ -765,6 +770,9 @@ syncDetailPageFromHash();
     panel.setAttribute('aria-hidden','true');
     section.classList.remove('product-expanded');
   }
+
+  // 暴露給外部呼叫（離開頁面時自動關閉）
+  window.__closeQihuaPanel = closePanel;
 
   if(btn) btn.addEventListener('click', openPanel);
 

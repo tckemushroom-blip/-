@@ -462,8 +462,11 @@ body.detail-returning .detail-page::before{
 /* 可點擊圖片 — 展開後移到右側並放大 */
 .detail-page-media--expandable{
   cursor:pointer;
-  transition:transform 0.7s cubic-bezier(0.77,0,0.18,1), width 0.7s cubic-bezier(0.77,0,0.18,1);
   position:relative;
+}
+.detail-page-media--expandable .detail-expand-btn img{
+  transition:transform 1s cubic-bezier(0.16,1,0.3,1);
+  transform-origin:center center;
 }
 #detail-product.product-expanded .detail-page-media--expandable{
   position:fixed;
@@ -472,6 +475,10 @@ body.detail-returning .detail-page::before{
   width:58vw;
   height:100vh;
   z-index:9;
+  transition:top 1s cubic-bezier(0.16,1,0.3,1),
+             right 1s cubic-bezier(0.16,1,0.3,1),
+             width 1s cubic-bezier(0.16,1,0.3,1),
+             height 1s cubic-bezier(0.16,1,0.3,1);
 }
 .detail-expand-btn{
   position:absolute;
@@ -525,9 +532,10 @@ body.detail-returning .detail-page::before{
 .product-expand-title{
   margin:0;
   font-family:var(--font-heavy);
+  font-weight:400;
   font-size:clamp(28px,3.5vw,52px);
   letter-spacing:0.2em;
-  color:var(--text);
+  color:#68615f;
   line-height:1.2;
 }
 .product-expand-subtitle{
@@ -543,7 +551,7 @@ body.detail-returning .detail-page::before{
   font-size:10.5pt;
   line-height:2;
   letter-spacing:0.08em;
-  color:var(--text);
+  color:#68615f;
   white-space:pre-line;
 }
 .detail-media-caption{
