@@ -461,39 +461,6 @@ const GRAPHIC_SECTION_INDEX = 2;
 const NAV_TRANSITION_MS = 260;
 const NAV_TRANSITION_SWITCH_MS = 110;
 
-// 同步側邊導航欄位置，確保它相對於視口而不是某個祖先
-function syncDetailSideNavPosition() {
-  const sideNav = document.getElementById('global-side-nav');
-  if (!sideNav) return;
-  
-  const sceneEl = document.getElementById('scene');
-  const siteShell = document.getElementById('site-shell');
-  
-  // 計算當前視口偏移
-  let offsetX = 0;
-  if (sceneEl) {
-    const sceneTransform = window.getComputedStyle(sceneEl).transform;
-    const sceneMatch = sceneTransform.match(/translate\(([^,]+)px/);
-    if (sceneMatch) {
-      offsetX += parseFloat(sceneMatch[1]);
-    }
-  }
-  if (siteShell) {
-    const shellTransform = window.getComputedStyle(siteShell).transform;
-    const shellMatch = shellTransform.match(/translate\(([^,]+)px/);
-    if (shellMatch) {
-      offsetX += parseFloat(shellMatch[1]);
-    }
-  }
-  
-  // 應用補償位移
-  if (offsetX !== 0) {
-    sideNav.style.transform = `translateY(-50%) translateX(${-offsetX}px)`;
-  } else {
-    sideNav.style.transform = 'translateY(-50%)';
-  }
-}
-
 function clearPressedButtons() {
   document.querySelectorAll('.is-pressed-out').forEach((item) => item.classList.remove('is-pressed-out'));
 }
@@ -593,9 +560,6 @@ function switchDetailPage(nextKey, trigger) {
   // 更新側邊導航按鈕
   updateSideNavButtons(nextKey);
   
-  // 同步側邊導航欄位置
-  syncDetailSideNavPosition();
-  
   const currentKey = document.body.getAttribute('data-active-detail');
   const currentPage = currentKey ? detailPageMap[currentKey] : null;
   const nextPage = detailPageMap[nextKey];
@@ -615,7 +579,6 @@ function switchDetailPage(nextKey, trigger) {
 
   detailTransitionTimer = setTimeout(() => {
     finishDetailSwitch(nextPage, currentPage);
-    syncDetailSideNavPosition(); // 動畫結束後再同步位置
   }, DETAIL_TRANSITION_MS);
 }
 
