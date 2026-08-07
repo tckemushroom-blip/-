@@ -440,27 +440,6 @@ const detailPageMap = detailPages.reduce((map, page) => {
   return map;
 }, {});
 
-// 全局 side-nav 按鈕配置
-const detailNavConfig = {
-  product: { top: 'graphic', bottom: 'photo' },
-  graphic: { top: 'product', bottom: 'photo' },
-  photo: { top: 'product', bottom: 'graphic' }
-};
-
-function updateGlobalSideNav(currentDetailKey) {
-  if (!currentDetailKey) return;
-  const config = detailNavConfig[currentDetailKey];
-  if (!config) return;
-  
-  const topBtn = document.getElementById('detail-nav-top');
-  const backBtn = document.getElementById('detail-nav-back');
-  const bottomBtn = document.getElementById('detail-nav-bottom');
-  
-  if (topBtn) topBtn.setAttribute('data-open-detail', config.top);
-  if (backBtn) backBtn.setAttribute('data-close-detail', currentDetailKey);
-  if (bottomBtn) bottomBtn.setAttribute('data-open-detail', config.bottom);
-}
-
 function withoutDetailTransition(callback) {
   document.body.classList.add('detail-no-animate');
   callback();
@@ -631,7 +610,6 @@ function switchDetailPage(nextKey, trigger) {
   nextPage.classList.add('is-buttons-hidden');
   document.body.classList.add('detail-open', 'detail-switching');
   document.body.setAttribute('data-active-detail', nextKey);
-  updateGlobalSideNav(nextKey);
   nextPage.classList.add('is-active');
   currentPage.classList.add('is-leaving-left');
 
@@ -671,7 +649,6 @@ function openDetailPage(detailKey, options = {}) {
     detailPages.forEach((item) => item.classList.toggle('is-active', item === page));
     document.body.classList.add('detail-open');
     document.body.setAttribute('data-active-detail', detailKey);
-    updateGlobalSideNav(detailKey);
   };
 
   if (options.animate) {
