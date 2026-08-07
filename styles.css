@@ -596,7 +596,7 @@ body.detail-returning .detail-page::before{
   letter-spacing:0.08em;
 }
 .detail-side-nav{
-  position:fixed;
+  position:fixed !important;
   right:0;
   top:50%;
   transform:translateY(-50%);
